@@ -28,7 +28,7 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 
 @Composable
-fun IngredientRowItem(ingredient: IngredientListModel, modifier: Modifier = Modifier) {
+fun IngredientItem(ingredient: IngredientListModel, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.padding(0.dp).height(120.dp).width(120.dp),
         shape = RoundedCornerShape(10.dp),
@@ -92,7 +92,7 @@ fun PreviewIngredientItem() {
         999.9f,
         true
     )
-    ApplicationTheme { IngredientRowItem(item) }
+    ApplicationTheme { IngredientItem(item) }
 }
 
 @Preview

@@ -29,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
@@ -48,6 +48,7 @@ import com.example.makepizza_android.data.models.IngredientListModel
 import com.example.makepizza_android.data.models.PizzaListModel
 import com.example.makepizza_android.ui.theme.ApplicationTheme
 import com.example.makepizza_android.ui.view.common.BackGradient
+import com.example.makepizza_android.ui.view.common.IngredientItem
 import com.example.makepizza_android.ui.view.common.IngredientLoadingItem
 import com.example.makepizza_android.ui.view.common.PizzaListItem
 import com.example.makepizza_android.ui.view.common.PizzaListItemLoading
@@ -60,7 +61,7 @@ object StoreTab : Tab {
 
     @Composable
     override fun Content() {
-        val viewmodel = viewModel<StoreViewmodel>()
+        val viewmodel = viewModel<StoreTabViewmodel>()
 
         Scaffold {
             TabContent(
@@ -71,10 +72,14 @@ object StoreTab : Tab {
     }
 
     @Composable
-    fun TabContent(modifier: Modifier, viewmodel: StoreViewmodel) {
-        val isLoading by remember { mutableStateOf(true) }
-        val pizzasList by viewmodel.pizzas.observeAsState(initial = emptyList())
+    fun TabContent(modifier: Modifier, viewmodel: StoreTabViewmodel) {
         val ingredients by viewmodel.ingredients.observeAsState(initial = emptyList())
+        val pizzas by viewmodel.pizzas.observeAsState(initial = emptyList())
+        val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
+        val isLoading = when (uiState) {
+            StoreTabState.Success -> false
+            else -> true
+        }
 
         LazyColumn(
             modifier = modifier.fillMaxSize(),
@@ -85,12 +90,12 @@ object StoreTab : Tab {
             item { Banner() }
 
             this.showIngredientsRow(ingredients, isLoading)
-            this.showPizzasList(pizzasList, isLoading)
+            this.showPizzasList(pizzas, isLoading)
         }
     }
 
     @Composable
-    fun TabToolbar(viewmodel: StoreViewmodel, modifier: Modifier = Modifier) {
+    fun TabToolbar(viewmodel: StoreTabViewmodel, modifier: Modifier = Modifier) {
         val address by viewmodel.address.observeAsState(initial = "No Direccion Guardada 2")
 
         Row(
@@ -170,7 +175,7 @@ object StoreTab : Tab {
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 if (!isLoading) {
-                    items(ingredients) {}
+                    items(ingredients) { IngredientItem(it) }
                 } else {
                     items((1..7).toList()) { IngredientLoadingItem() }
                 }
