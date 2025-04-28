@@ -1,4 +1,4 @@
-package com.example.makepizza_android.ui.view.tabs
+package com.example.makepizza_android.ui.view.tabs.cart
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart

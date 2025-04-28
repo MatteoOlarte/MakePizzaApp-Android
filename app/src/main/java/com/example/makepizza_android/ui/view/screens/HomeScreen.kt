@@ -23,10 +23,10 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.example.makepizza_android.ui.theme.ApplicationTheme
-import com.example.makepizza_android.ui.view.tabs.AccountTab
-import com.example.makepizza_android.ui.view.tabs.CouponsTab
-import com.example.makepizza_android.ui.view.tabs.CustomizeTab
-import com.example.makepizza_android.ui.view.tabs.StoreTab
+import com.example.makepizza_android.ui.view.tabs.account.AccountTab
+import com.example.makepizza_android.ui.view.tabs.coupons.CouponsTab
+import com.example.makepizza_android.ui.view.tabs.customize.CustomizeTab
+import com.example.makepizza_android.ui.view.tabs.store.StoreTab
 
 class HomeScreen : Screen {
     @Composable

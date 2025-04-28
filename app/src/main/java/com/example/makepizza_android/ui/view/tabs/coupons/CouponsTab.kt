@@ -1,4 +1,4 @@
-package com.example.makepizza_android.ui.view.tabs
+package com.example.makepizza_android.ui.view.tabs.coupons
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,7 +23,6 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.makepizza_android.ui.theme.ApplicationTheme
 
-
 object CouponsTab : Tab {
     override val options: TabOptions
         @Composable
@@ -35,10 +34,10 @@ object CouponsTab : Tab {
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
         Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.Companion.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = { TabToolbar(scrollBehavior = scrollBehavior) }
         ) {
-            TabContent(modifier = Modifier.padding(top = it.calculateTopPadding()))
+            TabContent(modifier = Modifier.Companion.padding(top = it.calculateTopPadding()))
         }
     }
 

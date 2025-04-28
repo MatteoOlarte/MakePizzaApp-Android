@@ -1,11 +1,12 @@
-package com.example.makepizza_android.ui.view.tabs
+package com.example.makepizza_android.ui.view.tabs.customize
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DashboardCustomize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,7 +26,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.makepizza_android.ui.theme.ApplicationTheme
 
-object AccountTab : Tab {
+object CustomizeTab: Tab {
     override val options: TabOptions
         @Composable
         get() = _GetTabOptions()
@@ -33,13 +34,13 @@ object AccountTab : Tab {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
         Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = { TabToolbar(scrollBehavior = scrollBehavior) }
+            modifier = Modifier.Companion.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = { TabToolbar(scrollBehavior = scrollBehavior) },
         ) {
-            TabContent(modifier = Modifier.padding(top = it.calculateTopPadding()))
+            TabContent(modifier = Modifier.Companion.padding(top = it.calculateTopPadding()))
         }
     }
 
@@ -47,41 +48,50 @@ object AccountTab : Tab {
     @Composable
     fun TabToolbar(scrollBehavior: TopAppBarScrollBehavior) {
         TopAppBar(
-            title = { Text(text = "Profile") },
+            title = { Text(text = "My Pizzas") },
+            scrollBehavior = scrollBehavior,
             actions = {
                 IconButton(onClick = {}) {
-                    Icon(Icons.AutoMirrored.Filled.Logout, "")
+                    Icon(Icons.Filled.Add, "Add New Custom Pizza")
                 }
-            },
-            scrollBehavior = scrollBehavior
+            }
         )
     }
 
-
     @Composable
     fun TabContent(modifier: Modifier) {
-        Column (
+        val pizzas = (1..100).toList()
+
+        LazyColumn(
             modifier = modifier.fillMaxSize()
         ) {
-
+            items(pizzas) {
+                Text(text = "Pizza $it")
+            }
         }
     }
 
     @Composable
+    fun PizzaItem() {
+
+    }
+
+
+    @Composable
     private fun _GetTabOptions(): TabOptions {
-        val title = "Account"
-        val icon = rememberVectorPainter(Icons.Filled.Person)
+        val title = "Customize"
+        val icon = rememberVectorPainter(Icons.Filled.DashboardCustomize)
 
         return remember {
             TabOptions(index = 0u, title = title, icon = icon)
         }
     }
 
-    private fun readResolve(): Any = AccountTab
+    private fun readResolve(): Any = CustomizeTab
 }
 
 @Preview(device = Devices.PIXEL_6, showSystemUi = true)
 @Composable
-private fun AccountTabPreview() {
-    ApplicationTheme { AccountTab.Content() }
+private fun CustomizeTabPreview() {
+    ApplicationTheme { CustomizeTab.Content() }
 }
