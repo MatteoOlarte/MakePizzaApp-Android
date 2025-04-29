@@ -1,4 +1,4 @@
-package com.example.makepizza_android.ui.view.screens
+package com.example.makepizza_android.ui.view.screens.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +35,7 @@ class HomeScreen : Screen {
             Scaffold(
                 bottomBar = { ScreenNavBar() }
             ) {
-                ScreenContent(modifier = Modifier.padding(bottom = it.calculateBottomPadding()))
+                ScreenContent(modifier = Modifier.Companion.padding(bottom = it.calculateBottomPadding()))
             }
         }
     }
@@ -61,7 +61,7 @@ class HomeScreen : Screen {
 
     @Composable
     fun ScreenContent(modifier: Modifier) {
-        Box (modifier = modifier.fillMaxSize()) {
+        Box(modifier = modifier.fillMaxSize()) {
             CurrentTab()
         }
     }

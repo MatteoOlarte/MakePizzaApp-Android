@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,9 +22,11 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.makepizza_android.ui.theme.ApplicationTheme
+import com.example.makepizza_android.ui.view.screens.login.LoginScreen
 
 object AccountTab : Tab {
     override val options: TabOptions
@@ -47,10 +50,10 @@ object AccountTab : Tab {
     @Composable
     fun TabToolbar(scrollBehavior: TopAppBarScrollBehavior) {
         TopAppBar(
-            title = { Text(text = "Profile") },
+            title = { Text(text = "Cuenta") },
             actions = {
                 IconButton(onClick = {}) {
-                    Icon(Icons.AutoMirrored.Filled.Logout, "")
+                    Icon(Icons.AutoMirrored.Filled.Logout, "SALIR")
                 }
             },
             scrollBehavior = scrollBehavior
@@ -60,10 +63,14 @@ object AccountTab : Tab {
 
     @Composable
     fun TabContent(modifier: Modifier) {
+        var parentNavigator = LocalNavigator.current?.parent
+
         Column(
             modifier = modifier.fillMaxSize()
         ) {
-
+            Button(onClick = {parentNavigator?.push(LoginScreen())}) {
+                Text(text = "Login")
+            }
         }
     }
 

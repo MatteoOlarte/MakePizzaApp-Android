@@ -5,8 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
 import com.example.makepizza_android.ui.theme.ApplicationTheme
-import com.example.makepizza_android.ui.view.screens.HomeScreen
+import com.example.makepizza_android.ui.view.screens.home.HomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ApplicationTheme {
-                Navigator(HomeScreen())
+                Navigator(HomeScreen()) { SlideTransition(it) }
             }
         }
     }

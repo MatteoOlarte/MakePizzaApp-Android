@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.makepizza_android.data.models.IngredientListModel
 import com.example.makepizza_android.data.models.PizzaListModel
+import com.example.makepizza_android.data.repository.IngredientRepository
 import com.example.makepizza_android.data.repository.PizzaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,8 @@ class StoreTabViewmodel : ViewModel() {
     val uiState: StateFlow<StoreTabState> = _uiState.asStateFlow()
 
     private val pizzaRepository = PizzaRepository()
+
+    private val ingredientRepository = IngredientRepository()
 
     init {
         viewModelScope.launch {
@@ -49,7 +52,7 @@ class StoreTabViewmodel : ViewModel() {
     }
 
     private suspend fun fetchIngredients() {
-        val result = pizzaRepository.getAllIngredients()
+        val result = ingredientRepository.getAllIngredients()
         _ingredients.postValue(result)
     }
 }
