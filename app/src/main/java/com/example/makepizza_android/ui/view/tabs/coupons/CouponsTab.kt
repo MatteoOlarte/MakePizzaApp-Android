@@ -37,7 +37,7 @@ object CouponsTab : Tab {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         val contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(
             NavigationBarDefaults.windowInsets
         )

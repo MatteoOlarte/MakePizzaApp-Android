@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "410698085538",
+    "project_id": "programacionmovil-2025-1",
+    "storage_bucket": "programacionmovil-2025-1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410698085538:android:122800ac13de500a4e53fb",
+        "android_client_info": {
+          "package_name": "com.example.makepizza_android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzBJZwVppSNeu8Rtg7x7S80OZFftUQZYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

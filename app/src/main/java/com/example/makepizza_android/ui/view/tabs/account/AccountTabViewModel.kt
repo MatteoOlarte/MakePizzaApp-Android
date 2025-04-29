@@ -1,4 +1,7 @@
 package com.example.makepizza_android.ui.view.tabs.account
 
-class AccountTabViewModel {
+import androidx.lifecycle.ViewModel
+
+class AccountTabViewModel: ViewModel() {
+
 }

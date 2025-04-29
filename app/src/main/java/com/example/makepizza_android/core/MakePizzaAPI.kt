@@ -53,7 +53,7 @@ class CacheInterceptor(): Interceptor {
 
         return if (shouldCache) {
             response.newBuilder().also {
-                it.header("Cache-Control", "public, max-age=${15 * 60}")
+                it.header("Cache-Control", "public, max-age=${120 * 60}")
             }.build()
         } else {
             response
