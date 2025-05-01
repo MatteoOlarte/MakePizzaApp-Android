@@ -106,16 +106,16 @@ object AccountTab : Tab {
             ShowLoading(modifier = modifier)
         } else {
             if (userLogged) {
-                ShowProfileInfo(modifier = modifier)
+                ShowProfileInfo(modifier = modifier, viewmodel = viewmodel)
             } else {
-                LoginRequired(toLogin = {navigator?.push(LoginScreen())}, modifier = modifier)
+                LoginRequired(toLogin = { navigator?.push(LoginScreen()) }, modifier = modifier)
             }
         }
     }
 
     @Composable
     private fun ShowLoading(modifier: Modifier = Modifier) {
-        Column (
+        Column(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -127,7 +127,7 @@ object AccountTab : Tab {
     }
 
     @Composable
-    private fun ShowProfileInfo(modifier: Modifier = Modifier) {
+    private fun ShowProfileInfo(viewmodel: AccountTabViewModel, modifier: Modifier = Modifier) {
         LazyColumn(
             modifier = modifier.fillMaxSize(),
         ) {
@@ -135,7 +135,7 @@ object AccountTab : Tab {
             item { Spacer(modifier = Modifier.height(20.dp)) }
             item { AccountOptions() }
             item { LegalOptions() }
-            item { LogoutButton() }
+            item { LogoutButton(onClick = { viewmodel.handleUserLogout() }) }
         }
     }
 
@@ -227,13 +227,13 @@ object AccountTab : Tab {
     }
 
     @Composable
-    private fun LogoutButton() {
+    private fun LogoutButton(onClick: () -> Unit = {}) {
         Box(
             modifier = Modifier.fillMaxWidth().padding(16.dp)
         ) {
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {}
+                onClick = onClick
             ) {
                 Text(text = "Salir")
             }

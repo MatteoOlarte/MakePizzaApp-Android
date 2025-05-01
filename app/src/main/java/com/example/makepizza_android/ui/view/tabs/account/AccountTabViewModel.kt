@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.makepizza_android.data.models.UserModel
 import com.example.makepizza_android.data.repository.UserRepository
+import com.example.makepizza_android.domain.usecases.SignOutUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,6 +23,21 @@ class AccountTabViewModel: ViewModel() {
 
     init {
         viewModelScope.launch { fetchCurrentUserModel() }
+    }
+
+    fun handleUserLogout() {
+        viewModelScope.launch { logoutUser() }
+    }
+
+    private suspend fun logoutUser() {
+        SignOutUseCase().invoke().fold(
+            onSuccess = {
+                _uiState.value = AccountTabState.Success(hasCurrentUser = false)
+            },
+            onFailure = { error ->
+                _uiState.value = AccountTabState.Error(error.message ?: "Failed to sign out")
+            }
+        )
     }
 
     private suspend fun fetchCurrentUserModel() {
