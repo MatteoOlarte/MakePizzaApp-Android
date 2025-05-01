@@ -44,6 +44,7 @@ voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", vers
 valentinilk-shimmer-compose = { module = "com.valentinilk.shimmer:compose-shimmer", version = "1.3.2" }
 google-firebase-boom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 google-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+google-firebase-auth = {module = "com.google.firebase:firebase-auth"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

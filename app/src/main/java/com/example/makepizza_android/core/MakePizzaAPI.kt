@@ -1,6 +1,7 @@
 package com.example.makepizza_android.core
 
 import com.example.makepizza_android.App
+import com.google.firebase.auth.FirebaseAuth
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -25,6 +26,7 @@ object MakePizzaAPI {
         val client = OkHttpClient.Builder().also {
             it.cache(cache)
             it.addInterceptor(ConnectionInterceptor())
+            it.addInterceptor(AuthInterceptor())
             it.addNetworkInterceptor(CacheInterceptor())
             it.connectTimeout(20L, TimeUnit.SECONDS)
             it.readTimeout(20L, TimeUnit.SECONDS)
@@ -34,7 +36,7 @@ object MakePizzaAPI {
     }
 }
 
-class ConnectionInterceptor(): Interceptor {
+class ConnectionInterceptor() : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         try {
             return chain.proceed(chain.request())
@@ -44,19 +46,36 @@ class ConnectionInterceptor(): Interceptor {
     }
 }
 
-class CacheInterceptor(): Interceptor {
+class CacheInterceptor() : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val url = request.url().toString()
-        val shouldCache = url.contains("fetch-all")
+        val shouldCache = request.method() == "GET" && url.contains("fetch-all")
         val response = chain.proceed(request)
+        val serverCacheControl = response.header("Cache-Control")
 
-        return if (shouldCache) {
+        return if (serverCacheControl?.contains("no-cache") == true || !shouldCache) {
+            response
+        } else {
             response.newBuilder().also {
                 it.header("Cache-Control", "public, max-age=${120 * 60}")
             }.build()
-        } else {
-            response
         }
+    }
+}
+
+class AuthInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val originalRequest = chain.request()
+        val token = FirebaseAuth.getInstance().currentUser?.getIdToken(false)?.result?.token
+        val newRequest = if (token != null) {
+            originalRequest.newBuilder().also {
+                it.header("Authorization", "Bearer $token")
+            }.build()
+        } else {
+            originalRequest
+        }
+
+        return chain.proceed(newRequest)
     }
 }
