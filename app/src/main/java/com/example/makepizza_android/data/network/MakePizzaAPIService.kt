@@ -17,6 +17,13 @@ class MakePizzaAPIService {
         }
     }
 
+    suspend fun getAllIngredients(): List<IngredientListModel> {
+        return withContext(Dispatchers.IO) {
+            val response = retrofit.create(IMakePizzaAPIClient::class.java).getAllIngredients()
+            response.body() ?: emptyList()
+        }
+    }
+
     suspend fun getAllPizzas(): List<PizzaListModel> {
         return withContext(Dispatchers.IO) {
             val response = retrofit.create(IMakePizzaAPIClient::class.java).getAllPizzas()
@@ -24,9 +31,9 @@ class MakePizzaAPIService {
         }
     }
 
-    suspend fun getAllIngredients(): List<IngredientListModel> {
+    suspend fun getAllPizzasFromUser(): List<PizzaListModel> {
         return withContext(Dispatchers.IO) {
-            val response = retrofit.create(IMakePizzaAPIClient::class.java).getAllIngredients()
+            val response = retrofit.create(IMakePizzaAPIClient::class.java).getAllPizzasFromUser()
             response.body() ?: emptyList()
         }
     }

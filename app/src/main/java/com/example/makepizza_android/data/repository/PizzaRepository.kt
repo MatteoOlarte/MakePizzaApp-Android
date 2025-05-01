@@ -10,4 +10,9 @@ class PizzaRepository {
         val response = api.getAllPizzas()
         return response
     }
+
+    suspend fun getAllPizzasFromUser(): List<PizzaListModel> {
+        val response = api.getAllPizzasFromUser()
+        return response
+    }
 }

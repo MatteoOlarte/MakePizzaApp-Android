@@ -30,6 +30,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.example.makepizza_android.data.models.UserModel
 import com.example.makepizza_android.ui.theme.ApplicationTheme
 import com.example.makepizza_android.ui.view.common.LoginRequired
 import com.example.makepizza_android.ui.view.screens.login.LoginScreen
@@ -117,7 +119,7 @@ object AccountTab : Tab {
     private fun ShowLoading(modifier: Modifier = Modifier) {
         Column(
             modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom,
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularProgressIndicator()
@@ -128,10 +130,12 @@ object AccountTab : Tab {
 
     @Composable
     private fun ShowProfileInfo(viewmodel: AccountTabViewModel, modifier: Modifier = Modifier) {
+        val current = viewmodel.currentUser.observeAsState().value
+
         LazyColumn(
             modifier = modifier.fillMaxSize(),
         ) {
-            item { ProfileInfo() }
+            item { ProfileInfo(current!!) }
             item { Spacer(modifier = Modifier.height(20.dp)) }
             item { AccountOptions() }
             item { LegalOptions() }
@@ -140,23 +144,27 @@ object AccountTab : Tab {
     }
 
     @Composable
-    private fun ProfileInfo() {
+    private fun ProfileInfo(data: UserModel) {
+        val username = data.name
+        val uid = data.uid
+        val email = data.email
+
         Column(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "Nombre del usuario",
+                text = username,
                 style = MaterialTheme.typography.headlineMedium,
             )
             Text(
-                text = "correo@ejemplo.com",
+                text = email,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "123e4567-e89b-12d3-a456-426614174000",
+                text = uid,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.outline
             )

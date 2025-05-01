@@ -10,9 +10,12 @@ interface IMakePizzaAPIClient {
     @GET("/users/current")
     suspend fun getCurrentUser(): Response<UserModel?>
 
+    @GET("/ingredients/fetch-all")
+    suspend fun getAllIngredients(): Response<List<IngredientListModel>>
+
     @GET("/pizzas/fetch-all")
     suspend fun getAllPizzas(): Response<List<PizzaListModel>>
 
-    @GET("/ingredients/fetch-all")
-    suspend fun getAllIngredients(): Response<List<IngredientListModel>>
+    @GET("/pizzas/user-defined/fetch-all")
+    suspend fun getAllPizzasFromUser(): Response<List<PizzaListModel>>
 }

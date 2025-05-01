@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.makepizza_android.R
@@ -61,10 +62,13 @@ fun PizzaListItem(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
+                            modifier = Modifier.weight(1f),
                             text = pizzaModel.name,
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 fontWeight = FontWeight.SemiBold
-                            )
+                            ),
+                            maxLines = 1,
+                            overflow = TextOverflow.Visible
                         )
                         Text(
                             text = "$${pizzaModel.price}",
@@ -164,7 +168,7 @@ fun PizzaListItemLoading(
 private fun PreviewPizzaItem() {
     val model = PizzaListModel(
         uid = "uid1",
-        name = "name",
+        name = "namsadasdasdasdsadasdasdasdase",
         desc = "desc",
         price = 999.9f,
         size = "S"
