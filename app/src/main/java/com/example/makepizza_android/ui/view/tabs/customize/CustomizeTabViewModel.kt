@@ -28,10 +28,10 @@ class CustomizeTabViewModel : ViewModel() {
     val pizzaRepository = PizzaRepository()
 
     init {
-        viewModelScope.launch { launchStartupTasks() }
+        viewModelScope.launch { launchTasks() }
     }
 
-    private suspend fun launchStartupTasks() {
+    private suspend fun launchTasks() {
         fetchCurrentUserModel()
         fetchPizzasFromUser()
     }
@@ -40,11 +40,13 @@ class CustomizeTabViewModel : ViewModel() {
         _uiState.value = CustomizeTabState.Loading
 
         val user: UserModel? = userRepository.getCurrentUser()
-        _currentUser.postValue(user)
+        _currentUser.value = user
         _uiState.value = CustomizeTabState.Success(hasCurrentUser = user != null)
     }
 
     private suspend fun fetchPizzasFromUser() {
+        if (currentUser.value == null) return
+
         _uiState.value = CustomizeTabState.Loading
 
         val pizzas = pizzaRepository.getAllPizzasFromUser()

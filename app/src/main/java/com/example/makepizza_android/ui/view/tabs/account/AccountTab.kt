@@ -95,12 +95,12 @@ object AccountTab : Tab {
         val navigator = LocalNavigator.current?.parent
         val uiState = viewmodel.uiState.collectAsStateWithLifecycle()
         val isLoading = when (uiState.value) {
-            AccountTabState.Success(hasCurrentUser = true) -> false
-            AccountTabState.Success(hasCurrentUser = false) -> false
-            else -> true
+            AccountTabState.Loading -> true
+            else -> false
         }
         val userLogged = when (uiState.value) {
             AccountTabState.Success(hasCurrentUser = true) -> true
+            AccountTabState.Success(hasCurrentUser = false) -> false
             else -> false
         }
 

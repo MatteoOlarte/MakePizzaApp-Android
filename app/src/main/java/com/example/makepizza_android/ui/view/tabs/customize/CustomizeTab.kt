@@ -91,12 +91,13 @@ object CustomizeTab: Tab {
     fun TabContent(viewmodel: CustomizeTabViewModel, modifier: Modifier = Modifier) {
         val navigator = LocalNavigator.current?.parent
         val uiState = viewmodel.uiState.collectAsStateWithLifecycle()
+        val isLoading = when (uiState.value) {
+            CustomizeTabState.Success(hasCurrentUser = true) -> false
+            CustomizeTabState.Success(hasCurrentUser = false) -> false
+            else -> true
+        }
         val userLogged = when (uiState.value) {
             CustomizeTabState.Success(hasCurrentUser = true) -> true
-            else -> false
-        }
-        val isLoading = when (uiState.value) {
-            CustomizeTabState.Loading -> true
             else -> false
         }
 

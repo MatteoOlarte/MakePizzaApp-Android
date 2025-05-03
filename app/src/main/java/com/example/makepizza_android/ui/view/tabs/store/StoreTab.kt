@@ -41,6 +41,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.makepizza_android.R
@@ -53,6 +55,7 @@ import com.example.makepizza_android.ui.view.common.IngredientLoadingItem
 import com.example.makepizza_android.ui.view.common.PizzaListItem
 import com.example.makepizza_android.ui.view.common.PizzaListItemLoading
 import com.example.makepizza_android.ui.view.common.TitleBox
+import com.example.makepizza_android.ui.view.screens.pizza.PizzaDetailScreen
 
 object StoreTab : Tab {
     override val options: TabOptions
@@ -73,6 +76,7 @@ object StoreTab : Tab {
 
     @Composable
     fun TabContent(modifier: Modifier, viewmodel: StoreTabViewmodel) {
+        val navigator = LocalNavigator.currentOrThrow.parent
         val ingredients by viewmodel.ingredients.observeAsState(initial = emptyList())
         val pizzas by viewmodel.pizzas.observeAsState(initial = emptyList())
         val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
@@ -90,13 +94,13 @@ object StoreTab : Tab {
             item { Banner() }
 
             this.showIngredientsRow(ingredients, isLoading)
-            this.showPizzasList(pizzas, isLoading)
+            this.showPizzasList(pizzas, isLoading, {navigator?.push(PizzaDetailScreen())})
         }
     }
 
     @Composable
     fun TabToolbar(viewmodel: StoreTabViewmodel, modifier: Modifier = Modifier) {
-        val address by viewmodel.address.observeAsState(initial = "No Direccion Guardada 2")
+        val address by viewmodel.address.observeAsState(initial = "No hay ninguna dirección guardada")
 
         Row(
             modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -108,7 +112,7 @@ object StoreTab : Tab {
                     style = MaterialTheme.typography.bodyMedium.copy()
                 )
                 Text(
-                    text = "Agregar Direcion",
+                    text = "Agrega una dirección",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Companion.SemiBold
                     )
@@ -153,7 +157,7 @@ object StoreTab : Tab {
                 modifier = Modifier.fillMaxSize().padding(16.dp),
                 contentAlignment = Alignment.BottomEnd
             ) {
-                ElevatedButton(onClick = {}) { Text(text = "Ver Mas") }
+                ElevatedButton(onClick = {}) { Text(text = "Ver mas") }
             }
         }
     }
@@ -185,12 +189,13 @@ object StoreTab : Tab {
 
     fun LazyListScope.showPizzasList(
         pizzas: List<PizzaListModel>,
-        isLoading: Boolean = true
+        isLoading: Boolean = true,
+        navigateTo: () -> Unit = {}
     ) {
-        item { TitleBox("Pizzas Popula", modifier = Modifier.padding(horizontal = 16.dp)) }
+        item { TitleBox("Pizzas Populares", modifier = Modifier.padding(horizontal = 16.dp)) }
 
         if (!isLoading) {
-            items(pizzas) { PizzaListItem(pizzaModel = it, onClick = {}) }
+            items(pizzas) { PizzaListItem(pizzaModel = it, onClick = navigateTo) }
         } else {
             items((1..7).toList()) { PizzaListItemLoading() }
         }
