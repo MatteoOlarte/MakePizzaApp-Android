@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,6 +9,13 @@ plugins {
 }
 
 android {
+    val properties = Properties()
+    val file = File(rootDir, "secret.properties")
+
+    if (file.exists() && file.isFile) {
+        file.inputStream().use { properties.load(it) }
+    }
+
     namespace = "com.example.makepizza_android"
     compileSdk = 35
 
@@ -16,7 +25,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -27,17 +35,26 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "MAKE_PIZZA_API_URL", properties.getProperty("PRD_MAKE_PIZZA_API_URL"))
+        }
+
+        debug {
+            buildConfigField("String", "MAKE_PIZZA_API_URL", properties.getProperty("DEV_MAKE_PIZZA_API_URL"))
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

@@ -1,6 +1,7 @@
 package com.example.makepizza_android.core
 
 import com.example.makepizza_android.App
+import com.example.makepizza_android.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
 import okhttp3.Cache
 import okhttp3.Interceptor
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit
 
 object MakePizzaAPI {
     fun getRetrofit(): Retrofit {
-        val url = "http://192.168.1.75:8000"
+        val url = BuildConfig.MAKE_PIZZA_API_URL
         val converter = GsonConverterFactory.create()
         val client = this.getClient()
 
@@ -47,10 +48,17 @@ class ConnectionInterceptor() : Interceptor {
 }
 
 class CacheInterceptor() : Interceptor {
+    private val cacheableURLs = listOf(
+        "/ingredients/fetch-all",
+        "/ingredients/query",
+        "/pizzas/fetch-all",
+        "/pizzas/query"
+    )
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val url = request.url().toString()
-        val shouldCache = request.method() == "GET" && url.contains("fetch-all")
+        val shouldCache = cacheableURLs.any { url.contains(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")
 
