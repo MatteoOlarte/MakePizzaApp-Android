@@ -43,6 +43,13 @@ class MakePizzaAPIService {
         }
     }
 
+    suspend fun getCustomPizza(uid: String): PizzaModel? {
+        return withContext(Dispatchers.IO) {
+            val response = retrofit.create(IMakePizzaAPIClient::class.java).getCustomPizza(uid)
+            response.body()
+        }
+    }
+
     suspend fun getAllPizzasFromUser(): List<PizzaListModel> {
         return withContext(Dispatchers.IO) {
             val response = retrofit.create(IMakePizzaAPIClient::class.java).getAllPizzasFromUser()

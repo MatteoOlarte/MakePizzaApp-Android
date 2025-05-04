@@ -57,14 +57,14 @@ import com.example.makepizza_android.data.models.PizzaModel
 import com.example.makepizza_android.ui.view.common.BackGradient
 
 
-class PizzaDetailScreen(val uid: String) : Screen {
+class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen {
     @OptIn(ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
         val viewmodel = viewModel<PizzaDetailViewModel>()
 
         LifecycleEffectOnce {
-            viewmodel.fetchPizzaModel(uid)
+            viewmodel.fetchPizzaModel(uid, isCustom)
         }
 
         Scaffold(

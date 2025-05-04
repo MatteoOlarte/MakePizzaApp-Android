@@ -17,6 +17,11 @@ class PizzaRepository {
         return response
     }
 
+    suspend fun getCustomPizza(uid: String): PizzaModel? {
+        val response = api.getCustomPizza(uid)
+        return response
+    }
+
     suspend fun getAllPizzasFromUser(): List<PizzaListModel> {
         val response = api.getAllPizzasFromUser()
         return response

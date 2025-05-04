@@ -110,13 +110,14 @@ class UserCacheInterceptor(): Interceptor {
 class ElementDetailsCacheInterceptor(): Interceptor {
     private val cacheableURLs = listOf(
         "/pizzas",
-        "/ingredients"
+        "/ingredients",
+        "/pizzas/user-defined"
     )
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val url = request.url().toString()
-        val shouldCache = cacheableURLs.any { url.contains(it) }
+        val shouldCache = cacheableURLs.any { url.endsWith(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")
 

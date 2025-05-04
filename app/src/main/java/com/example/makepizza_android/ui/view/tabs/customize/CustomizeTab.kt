@@ -39,8 +39,9 @@ import com.example.makepizza_android.ui.view.common.LoginRequired
 import com.example.makepizza_android.ui.view.common.PizzaListItem
 import com.example.makepizza_android.ui.view.common.PizzaListItemLoading
 import com.example.makepizza_android.ui.view.screens.login.LoginScreen
+import com.example.makepizza_android.ui.view.screens.pizza.PizzaDetailScreen
 
-object CustomizeTab: Tab {
+object CustomizeTab : Tab {
     override val options: TabOptions
         @Composable
         get() = _GetTabOptions()
@@ -101,11 +102,15 @@ object CustomizeTab: Tab {
             else -> false
         }
 
-        if  (isLoading) {
+        if (isLoading) {
             ShowLoading(modifier = modifier)
         } else {
             if (userLogged) {
-                ShowContent(modifier = modifier, viewmodel = viewmodel)
+                ShowContent(
+                    modifier = modifier,
+                    viewmodel = viewmodel,
+                    navigateTo = { navigator?.push(PizzaDetailScreen(it, true)) }
+                )
             } else {
                 LoginRequired(toLogin = { navigator?.push(LoginScreen()) }, modifier = modifier)
             }
@@ -125,13 +130,17 @@ object CustomizeTab: Tab {
     }
 
     @Composable
-    private fun ShowContent(viewmodel: CustomizeTabViewModel, modifier: Modifier = Modifier) {
+    private fun ShowContent(
+        viewmodel: CustomizeTabViewModel,
+        navigateTo: (uid: String) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
         val pizzas = viewmodel.pizzas.observeAsState(initial = emptyList()).value
 
-        LazyColumn (
+        LazyColumn(
             modifier = modifier
         ) {
-            items (pizzas) { PizzaListItem(it, {}) }
+            items(pizzas) { PizzaListItem(it, { navigateTo(it.uid) }) }
         }
     }
 

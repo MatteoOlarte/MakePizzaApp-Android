@@ -21,6 +21,9 @@ interface IMakePizzaAPIClient {
     @GET("/pizzas/fetch-all")
     suspend fun getAllPizzas(): Response<List<PizzaListModel>>
 
+    @GET("/pizzas/user-defined")
+    suspend fun getCustomPizza(@Query("pizza_uid") uid: String): Response<PizzaModel>
+
     @GET("/pizzas/user-defined/fetch-all")
     suspend fun getAllPizzasFromUser(): Response<List<PizzaListModel>>
 }
