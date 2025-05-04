@@ -22,11 +22,19 @@ class AccountTabViewModel: ViewModel() {
     val userRepository = UserRepository()
 
     init {
-        viewModelScope.launch { fetchCurrentUserModel() }
+        viewModelScope.launch { launchTasks() }
     }
 
     fun handleUserLogout() {
         viewModelScope.launch { logoutUser() }
+    }
+
+    private suspend fun launchTasks() {
+        try {
+            fetchCurrentUserModel()
+        } catch (ex: Exception) {
+            _uiState.value = AccountTabState.Error(ex.message!!)
+        }
     }
 
     private suspend fun logoutUser() {

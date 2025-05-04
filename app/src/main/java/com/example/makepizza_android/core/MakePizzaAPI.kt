@@ -1,5 +1,6 @@
 package com.example.makepizza_android.core
 
+import android.util.Log
 import com.example.makepizza_android.App
 import com.example.makepizza_android.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +22,16 @@ object MakePizzaAPI {
         return Retrofit.Builder().baseUrl(url).addConverterFactory(converter).client(client).build()
     }
 
+    fun clearCache() {
+        val client = this.getClient()
+
+        try {
+            client.cache()?.evictAll()
+        } catch (ex: Exception) {
+            Log.e("MakePizzaAPI", ex.message!!)
+        }
+    }
+
     private fun getClient(): OkHttpClient {
         val cacheSize = (5 * 1024 * 1024).toLong()
         val cache = Cache(App.context.cacheDir, cacheSize)
@@ -29,6 +40,7 @@ object MakePizzaAPI {
             it.addInterceptor(ConnectionInterceptor())
             it.addInterceptor(AuthInterceptor())
             it.addNetworkInterceptor(CacheInterceptor())
+            it.addNetworkInterceptor(UserCacheInterceptor())
             it.connectTimeout(20L, TimeUnit.SECONDS)
             it.readTimeout(20L, TimeUnit.SECONDS)
             it.writeTimeout(20L, TimeUnit.SECONDS)
@@ -67,6 +79,28 @@ class CacheInterceptor() : Interceptor {
         } else {
             response.newBuilder().also {
                 it.header("Cache-Control", "public, max-age=${120 * 60}")
+            }.build()
+        }
+    }
+}
+
+class UserCacheInterceptor(): Interceptor {
+    private val cacheableURLs = listOf(
+        "/users/current",
+    )
+
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+        val url = request.url().toString()
+        val shouldCache = cacheableURLs.any { url.contains(it) }
+        val response = chain.proceed(request)
+        val serverCacheControl = response.header("Cache-Control")
+
+        return if (serverCacheControl?.contains("no-cache") == true || !shouldCache) {
+            response
+        } else {
+            response.newBuilder().also {
+                it.header("Cache-Control", "public, max-age=${5 * 60}")
             }.build()
         }
     }

@@ -75,7 +75,6 @@ class PizzaDetailScreen : Screen {
         )
     }
 
-
     @Composable
     private fun ScreenBottomBar() {
         Column {

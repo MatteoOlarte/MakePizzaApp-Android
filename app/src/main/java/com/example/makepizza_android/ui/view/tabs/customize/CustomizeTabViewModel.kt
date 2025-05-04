@@ -32,8 +32,12 @@ class CustomizeTabViewModel : ViewModel() {
     }
 
     private suspend fun launchTasks() {
-        fetchCurrentUserModel()
-        fetchPizzasFromUser()
+        try {
+            fetchCurrentUserModel()
+            fetchPizzasFromUser()
+        } catch (ex: Exception) {
+            _uiState.value = CustomizeTabState.Error(ex.message!!)
+        }
     }
 
     private suspend fun fetchCurrentUserModel() {
