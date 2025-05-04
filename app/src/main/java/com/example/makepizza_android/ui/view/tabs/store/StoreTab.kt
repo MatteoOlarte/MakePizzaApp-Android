@@ -94,7 +94,7 @@ object StoreTab : Tab {
             item { Banner() }
 
             this.showIngredientsRow(ingredients, isLoading)
-            this.showPizzasList(pizzas, isLoading, {navigator?.push(PizzaDetailScreen())})
+            this.showPizzasList(pizzas, isLoading, { navigator?.push(PizzaDetailScreen(it)) })
         }
     }
 
@@ -190,12 +190,12 @@ object StoreTab : Tab {
     fun LazyListScope.showPizzasList(
         pizzas: List<PizzaListModel>,
         isLoading: Boolean = true,
-        navigateTo: () -> Unit = {}
+        navigateTo: (uid: String) -> Unit = {}
     ) {
         item { TitleBox("Pizzas Populares", modifier = Modifier.padding(horizontal = 16.dp)) }
 
         if (!isLoading) {
-            items(pizzas) { PizzaListItem(pizzaModel = it, onClick = navigateTo) }
+            items(pizzas) { PizzaListItem(pizzaModel = it, onClick = { navigateTo(it.uid) }) }
         } else {
             items((1..7).toList()) { PizzaListItemLoading() }
         }

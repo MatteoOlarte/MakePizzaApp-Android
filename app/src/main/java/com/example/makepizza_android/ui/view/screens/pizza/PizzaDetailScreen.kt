@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
@@ -36,27 +37,44 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
+import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import com.example.makepizza_android.R
-import com.example.makepizza_android.ui.theme.ApplicationTheme
+import com.example.makepizza_android.data.models.IngredientModel
+import com.example.makepizza_android.data.models.PizzaModel
 import com.example.makepizza_android.ui.view.common.BackGradient
 
-class PizzaDetailScreen : Screen {
+
+class PizzaDetailScreen(val uid: String) : Screen {
+    @OptIn(ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
+        val viewmodel = viewModel<PizzaDetailViewModel>()
+
+        LifecycleEffectOnce {
+            viewmodel.fetchPizzaModel(uid)
+        }
+
         Scaffold(
             topBar = { ScreenTopBar() },
             bottomBar = { ScreenBottomBar() }
         ) {
-            ScreenContent(modifier = Modifier.padding(it))
+            ScreenContent(
+                modifier = Modifier.padding(it),
+                viewmodel = viewmodel
+            )
         }
     }
 
@@ -66,7 +84,7 @@ class PizzaDetailScreen : Screen {
         val navigator = LocalNavigator.current
 
         TopAppBar(
-            title = { Text("Pizza") },
+            title = { Text("Información Producto") },
             navigationIcon = {
                 IconButton(onClick = { navigator?.pop() }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, "")
@@ -115,21 +133,46 @@ class PizzaDetailScreen : Screen {
     }
 
     @Composable
-    private fun ScreenContent(modifier: Modifier = Modifier) {
+    private fun ScreenContent(viewmodel: PizzaDetailViewModel, modifier: Modifier = Modifier) {
+        val uiState = viewmodel.uiState.collectAsStateWithLifecycle()
+        val data = viewmodel.currentPizzaModel.observeAsState().value
+
+        val isLoading = when (uiState.value) {
+            PizzaDetailViewState.Success -> false
+            else -> true
+        }
+
+        if (isLoading || data == null) {
+            ShowLoading(modifier = modifier)
+            return
+        }
+
         LazyColumn(
             modifier = modifier,
             contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { Image() }
-            item { Info() }
-
-            this.showPizzaIngredients()
+            item { Image(data) }
+            item { Info(data) }
+            this.showPizzaIngredients(data)
         }
     }
 
     @Composable
-    private fun Image(modifier: Modifier = Modifier) {
+    private fun ShowLoading(modifier: Modifier = Modifier) {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator()
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Cargando Datos...")
+        }
+    }
+
+    @Composable
+    private fun Image(data: PizzaModel, modifier: Modifier = Modifier) {
         Box(
             modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp)
         ) {
@@ -156,17 +199,15 @@ class PizzaDetailScreen : Screen {
     }
 
     @Composable
-    private fun Info() {
+    private fun Info(data: PizzaModel) {
         Column {
             Text(
-                text = "Titulo",
+                text = data.name,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    color = MaterialTheme.colorScheme.primary
-                )
+                style = MaterialTheme.typography.headlineLarge.copy()
             )
             Text(
-                text = "Desc",
+                text = data.desc ?: "...",
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -175,17 +216,15 @@ class PizzaDetailScreen : Screen {
         }
     }
 
-    private fun LazyListScope.showPizzaIngredients() {
-        val list = (1..6).toList()
-
+    private fun LazyListScope.showPizzaIngredients(data: PizzaModel) {
         this.item {
             Text(
-                text = "Tamano",
+                text = "Precio",
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                style = MaterialTheme.typography.titleLarge.copy()
+                style = MaterialTheme.typography.titleMedium.copy()
             )
             Text(
-                text = "S",
+                text = "$${data.price}",
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Light)
             )
@@ -193,12 +232,38 @@ class PizzaDetailScreen : Screen {
 
         this.item {
             Text(
-                text = "Precio",
+                text = "Tamaño",
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                style = MaterialTheme.typography.titleLarge.copy()
+                style = MaterialTheme.typography.titleMedium.copy()
             )
             Text(
-                text = "$999",
+                text = data.size.uppercase(),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Light)
+            )
+        }
+
+        this.item {
+            Text(
+                text = "Masa",
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.titleMedium.copy()
+            )
+            Text(
+                text = data.dough.name,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Light)
+            )
+        }
+
+        this.item {
+            Text(
+                text = "Salsa",
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.titleMedium.copy()
+            )
+            Text(
+                text = data.sauce.name,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Light)
             )
@@ -208,17 +273,17 @@ class PizzaDetailScreen : Screen {
             Text(
                 text = "Ingredientes",
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                style = MaterialTheme.typography.titleLarge.copy()
+                style = MaterialTheme.typography.titleMedium.copy()
             )
         }
 
-        this.items(list) {
-            IngredientListItem(modifier = Modifier.padding(horizontal = 16.dp))
+        this.items(data.ingredients) {
+            IngredientListItem(it, modifier = Modifier.padding(horizontal = 16.dp))
         }
     }
 
     @Composable
-    private fun IngredientListItem(modifier: Modifier = Modifier) {
+    private fun IngredientListItem(data: IngredientModel, modifier: Modifier = Modifier) {
         Box(
             modifier = modifier
         ) {
@@ -247,7 +312,7 @@ class PizzaDetailScreen : Screen {
                     ) {
                         Text(
                             modifier = Modifier.weight(1f),
-                            text = "Nombre Ingrediente",
+                            text = data.name,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Normal
                             ),
@@ -255,7 +320,7 @@ class PizzaDetailScreen : Screen {
                             overflow = TextOverflow.Visible
                         )
                         Text(
-                            text = "$900",
+                            text = "$${data.price}",
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 fontWeight = FontWeight.SemiBold
                             ),
@@ -266,10 +331,4 @@ class PizzaDetailScreen : Screen {
             }
         }
     }
-}
-
-@Composable
-@Preview(showSystemUi = true)
-private fun PizzaDetailScreenPreview() {
-    ApplicationTheme { PizzaDetailScreen().Content() }
 }

@@ -3,6 +3,7 @@ package com.example.makepizza_android.data.network
 import com.example.makepizza_android.core.MakePizzaAPI
 import com.example.makepizza_android.data.models.IngredientListModel
 import com.example.makepizza_android.data.models.PizzaListModel
+import com.example.makepizza_android.data.models.PizzaModel
 import com.example.makepizza_android.data.models.UserModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,10 +18,21 @@ class MakePizzaAPIService {
         }
     }
 
+    suspend fun getIngredient() {
+
+    }
+
     suspend fun getAllIngredients(): List<IngredientListModel> {
         return withContext(Dispatchers.IO) {
             val response = retrofit.create(IMakePizzaAPIClient::class.java).getAllIngredients()
             response.body() ?: emptyList()
+        }
+    }
+
+    suspend fun getPizza(uid: String): PizzaModel? {
+        return withContext(Dispatchers.IO) {
+            val response = retrofit.create(IMakePizzaAPIClient::class.java).getPizza(uid)
+            response.body()
         }
     }
 

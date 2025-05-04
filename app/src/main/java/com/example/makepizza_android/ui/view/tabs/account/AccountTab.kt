@@ -132,14 +132,16 @@ object AccountTab : Tab {
     private fun ShowProfileInfo(viewmodel: AccountTabViewModel, modifier: Modifier = Modifier) {
         val current = viewmodel.currentUser.observeAsState().value
 
-        LazyColumn(
-            modifier = modifier.fillMaxSize(),
-        ) {
-            item { ProfileInfo(current!!) }
-            item { Spacer(modifier = Modifier.height(20.dp)) }
-            item { AccountOptions() }
-            item { LegalOptions() }
-            item { LogoutButton(onClick = { viewmodel.handleUserLogout() }) }
+        if (current != null) {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+            ) {
+                item { ProfileInfo(current) }
+                item { Spacer(modifier = Modifier.height(20.dp)) }
+                item { AccountOptions() }
+                item { LegalOptions() }
+                item { LogoutButton(onClick = { viewmodel.handleUserLogout() }) }
+            }
         }
     }
 

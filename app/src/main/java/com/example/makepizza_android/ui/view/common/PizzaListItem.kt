@@ -63,7 +63,7 @@ fun PizzaListItem(
                     ) {
                         Text(
                             modifier = Modifier.weight(1f),
-                            text = pizzaModel.name,
+                            text = "${pizzaModel.name} ${pizzaModel.size}",
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 fontWeight = FontWeight.SemiBold
                             ),
