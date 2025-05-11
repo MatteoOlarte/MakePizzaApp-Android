@@ -1,8 +1,8 @@
 package com.example.makepizza_android.data.repository
 
-import com.example.makepizza_android.data.models.PizzaListModel
-import com.example.makepizza_android.data.models.PizzaModel
-import com.example.makepizza_android.data.network.MakePizzaAPIService
+import com.example.makepizza_android.data.remote.models.PizzaListModel
+import com.example.makepizza_android.data.remote.models.PizzaModel
+import com.example.makepizza_android.data.remote.network.MakePizzaAPIService
 
 class PizzaRepository {
     private val api = MakePizzaAPIService()

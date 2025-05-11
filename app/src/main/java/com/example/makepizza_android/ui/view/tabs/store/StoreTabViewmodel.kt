@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.makepizza_android.data.models.IngredientListModel
-import com.example.makepizza_android.data.models.PizzaListModel
+import com.example.makepizza_android.data.remote.models.IngredientListModel
+import com.example.makepizza_android.data.remote.models.PizzaListModel
 import com.example.makepizza_android.data.repository.IngredientRepository
 import com.example.makepizza_android.data.repository.PizzaRepository
 import kotlinx.coroutines.flow.MutableStateFlow

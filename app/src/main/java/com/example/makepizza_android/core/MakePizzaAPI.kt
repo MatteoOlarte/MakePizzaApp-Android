@@ -70,7 +70,7 @@ class CacheInterceptor() : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val url = request.url().toString()
+        val url = request.url().encodedPath().toString()
         val shouldCache = cacheableURLs.any { url.contains(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")
@@ -92,7 +92,7 @@ class UserCacheInterceptor(): Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val url = request.url().toString()
+        val url = request.url().encodedPath().toString()
         val shouldCache = cacheableURLs.any { url.contains(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")
@@ -116,7 +116,8 @@ class ElementDetailsCacheInterceptor(): Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val url = request.url().toString()
+        val url = request.url().encodedPath().toString()
+        Log.d("Retrofit", url)
         val shouldCache = cacheableURLs.any { url.endsWith(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")

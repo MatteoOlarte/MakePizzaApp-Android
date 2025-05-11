@@ -52,8 +52,8 @@ import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import com.example.makepizza_android.R
-import com.example.makepizza_android.data.models.IngredientModel
-import com.example.makepizza_android.data.models.PizzaModel
+import com.example.makepizza_android.data.remote.models.IngredientModel
+import com.example.makepizza_android.data.remote.models.PizzaModel
 import com.example.makepizza_android.ui.view.common.BackGradient
 
 

@@ -46,8 +46,8 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.makepizza_android.R
-import com.example.makepizza_android.data.models.IngredientListModel
-import com.example.makepizza_android.data.models.PizzaListModel
+import com.example.makepizza_android.data.remote.models.IngredientListModel
+import com.example.makepizza_android.data.remote.models.PizzaListModel
 import com.example.makepizza_android.ui.theme.ApplicationTheme
 import com.example.makepizza_android.ui.view.common.BackGradient
 import com.example.makepizza_android.ui.view.common.IngredientItem

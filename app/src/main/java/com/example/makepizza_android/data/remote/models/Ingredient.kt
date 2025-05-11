@@ -1,4 +1,4 @@
-package com.example.makepizza_android.data.models
+package com.example.makepizza_android.data.remote.models
 
 import com.google.gson.annotations.SerializedName
 import java.util.Date

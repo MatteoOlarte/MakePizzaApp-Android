@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.makepizza_android.R
-import com.example.makepizza_android.data.models.PizzaListModel
+import com.example.makepizza_android.data.remote.models.PizzaListModel
 import com.example.makepizza_android.ui.theme.ApplicationTheme
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds

@@ -1,10 +1,10 @@
-package com.example.makepizza_android.data.network
+package com.example.makepizza_android.data.remote.network
 
 import com.example.makepizza_android.core.MakePizzaAPI
-import com.example.makepizza_android.data.models.IngredientListModel
-import com.example.makepizza_android.data.models.PizzaListModel
-import com.example.makepizza_android.data.models.PizzaModel
-import com.example.makepizza_android.data.models.UserModel
+import com.example.makepizza_android.data.remote.models.IngredientListModel
+import com.example.makepizza_android.data.remote.models.PizzaListModel
+import com.example.makepizza_android.data.remote.models.PizzaModel
+import com.example.makepizza_android.data.remote.models.UserModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

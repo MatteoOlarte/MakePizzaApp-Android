@@ -42,12 +42,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
+import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.example.makepizza_android.data.models.UserModel
+import com.example.makepizza_android.data.remote.models.UserModel
 import com.example.makepizza_android.ui.theme.ApplicationTheme
 import com.example.makepizza_android.ui.view.common.LoginRequired
+import com.example.makepizza_android.ui.view.screens.address.AddressScreen
 import com.example.makepizza_android.ui.view.screens.login.LoginScreen
 
 object AccountTab : Tab {
@@ -55,7 +59,7 @@ object AccountTab : Tab {
         @Composable
         get() = _GetTabOptions()
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -63,6 +67,10 @@ object AccountTab : Tab {
             NavigationBarDefaults.windowInsets
         )
         val viewmodel = viewModel<AccountTabViewModel>()
+
+        LifecycleEffectOnce {
+            viewmodel.fetchAllData()
+        }
 
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -138,7 +146,7 @@ object AccountTab : Tab {
             ) {
                 item { ProfileInfo(current) }
                 item { Spacer(modifier = Modifier.height(20.dp)) }
-                item { AccountOptions() }
+                item { AccountOptions(viewmodel) }
                 item { LegalOptions() }
                 item { LogoutButton(onClick = { viewmodel.handleUserLogout() }) }
             }
@@ -174,7 +182,9 @@ object AccountTab : Tab {
     }
 
     @Composable
-    private fun AccountOptions() {
+    private fun AccountOptions(viewmodel: AccountTabViewModel) {
+        val navigator = LocalNavigator.currentOrThrow.parent
+
         Text(
             modifier = Modifier
                 .fillMaxWidth()
@@ -188,32 +198,32 @@ object AccountTab : Tab {
         ) {
             ListItem(
                 headlineContent = { Text("Pedidos") },
-                modifier = Modifier.clickable { /* Sin lógica */ }
+                modifier = Modifier.clickable (enabled = true) {  }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Información de facturación") },
-                modifier = Modifier.clickable { /* Sin lógica */ }
+                modifier = Modifier.clickable (enabled = true) { navigator?.push(AddressScreen()) }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Dirección de envío") },
-                modifier = Modifier.clickable { /* Sin lógica */ }
+                modifier = Modifier.clickable (enabled = true) { navigator?.push(AddressScreen()) }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Notificaciones") },
-                modifier = Modifier.clickable { /* Sin lógica */ }
+                modifier = Modifier.clickable (enabled = true) {  }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Editar perfil") },
-                modifier = Modifier.clickable { /* Sin lógica */ }
+                modifier = Modifier.clickable (enabled = true) {  }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Ayuda") },
-                modifier = Modifier.clickable { /* Sin lógica */ }
+                modifier = Modifier.clickable (enabled = true) {  }
             )
         }
     }
