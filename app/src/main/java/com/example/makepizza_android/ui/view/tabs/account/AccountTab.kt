@@ -51,7 +51,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.makepizza_android.data.remote.models.UserModel
 import com.example.makepizza_android.ui.theme.ApplicationTheme
 import com.example.makepizza_android.ui.view.common.LoginRequired
-import com.example.makepizza_android.ui.view.screens.address.AddressScreen
+import com.example.makepizza_android.ui.view.screens.address.list.AddressScreen
 import com.example.makepizza_android.ui.view.screens.login.LoginScreen
 
 object AccountTab : Tab {
@@ -184,6 +184,7 @@ object AccountTab : Tab {
     @Composable
     private fun AccountOptions(viewmodel: AccountTabViewModel) {
         val navigator = LocalNavigator.currentOrThrow.parent
+        val current = viewmodel.currentUser.observeAsState().value!!
 
         Text(
             modifier = Modifier
@@ -202,13 +203,8 @@ object AccountTab : Tab {
             )
             HorizontalDivider()
             ListItem(
-                headlineContent = { Text("Información de facturación") },
-                modifier = Modifier.clickable (enabled = true) { navigator?.push(AddressScreen()) }
-            )
-            HorizontalDivider()
-            ListItem(
                 headlineContent = { Text("Dirección de envío") },
-                modifier = Modifier.clickable (enabled = true) { navigator?.push(AddressScreen()) }
+                modifier = Modifier.clickable (enabled = true) { navigator?.push(AddressScreen(current.uid)) }
             )
             HorizontalDivider()
             ListItem(
