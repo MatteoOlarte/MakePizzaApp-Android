@@ -125,7 +125,11 @@ class AddressCreateScreen(val userID: String) : Screen {
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done
             ),
-            singleLine = true
+            placeholder = { Text("Casa, Trabajo, etc") },
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors().copy(
+                focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.50f)
+            )
         )
     }
 }

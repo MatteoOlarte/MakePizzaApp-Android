@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -29,11 +30,15 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.example.makepizza_android.data.remote.models.PizzaListModel
 import com.example.makepizza_android.ui.theme.ApplicationTheme
 import com.example.makepizza_android.ui.view.common.LoginRequired
 import com.example.makepizza_android.ui.view.common.PizzaListItem
@@ -53,7 +58,20 @@ object CustomizeTab : Tab {
         val contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(
             NavigationBarDefaults.windowInsets
         )
-        val viewmodel = viewModel<CustomizeTabViewModel>()
+        val viewModel = viewModel<CustomizeTabViewModel>()
+        val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+        val lifecycleOwner = LocalLifecycleOwner.current
+
+        DisposableEffect(lifecycleOwner) {
+            val observer = LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_RESUME) {
+                    viewModel.fetchData()
+                }
+            }
+
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+        }
 
         Scaffold(
             modifier = Modifier.Companion.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -63,7 +81,8 @@ object CustomizeTab : Tab {
         ) {
             TabContent(
                 modifier = Modifier.Companion.padding(it),
-                viewmodel = viewmodel
+                viewModel = viewModel,
+                uiState = uiState.value
             )
         }
     }
@@ -89,18 +108,22 @@ object CustomizeTab : Tab {
     }
 
     @Composable
-    fun TabContent(viewmodel: CustomizeTabViewModel, modifier: Modifier = Modifier) {
+    fun TabContent(
+        viewModel: CustomizeTabViewModel,
+        uiState: CustomizeTabState,
+        modifier: Modifier = Modifier
+    ) {
         val navigator = LocalNavigator.current?.parent
-        val uiState = viewmodel.uiState.collectAsStateWithLifecycle()
-        val isLoading = when (uiState.value) {
+        val isLoading = when (uiState) {
             CustomizeTabState.Success(hasCurrentUser = true) -> false
             CustomizeTabState.Success(hasCurrentUser = false) -> false
             else -> true
         }
-        val userLogged = when (uiState.value) {
+        val userLogged = when (uiState) {
             CustomizeTabState.Success(hasCurrentUser = true) -> true
             else -> false
         }
+        val pizzas = viewModel.pizzas.observeAsState(initial = emptyList()).value
 
         if (isLoading) {
             ShowLoading(modifier = modifier)
@@ -108,7 +131,7 @@ object CustomizeTab : Tab {
             if (userLogged) {
                 ShowContent(
                     modifier = modifier,
-                    viewmodel = viewmodel,
+                    data = pizzas,
                     navigateTo = { navigator?.push(PizzaDetailScreen(it, true)) }
                 )
             } else {
@@ -131,16 +154,14 @@ object CustomizeTab : Tab {
 
     @Composable
     private fun ShowContent(
-        viewmodel: CustomizeTabViewModel,
+        data: List<PizzaListModel>,
         navigateTo: (uid: String) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val pizzas = viewmodel.pizzas.observeAsState(initial = emptyList()).value
-
         LazyColumn(
             modifier = modifier
         ) {
-            items(pizzas) { PizzaListItem(it, { navigateTo(it.uid) }) }
+            items(data) { PizzaListItem(it, { navigateTo(it.uid) }) }
         }
     }
 

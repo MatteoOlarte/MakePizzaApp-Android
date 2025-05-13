@@ -5,21 +5,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.makepizza_android.domain.models.Address
-import com.example.makepizza_android.domain.usecases.address.GetAllAddressUseCase
+import com.example.makepizza_android.domain.usecases.user.CurrentUser
 import kotlinx.coroutines.launch
 
 class AddressScreenViewModel() : ViewModel() {
     private val _addressesList = MutableLiveData<List<Address>>(emptyList())
     val addressesList: LiveData<List<Address>> = _addressesList
 
-    private val getAllAddressUseCase = GetAllAddressUseCase()
+    private val currentUserUseCase = CurrentUser()
 
-    fun getAllUserAddresses(userID: String) {
-        viewModelScope.launch { fetchAllUserAddresses(userID) }
+    fun getAllUserAddresses() {
+        viewModelScope.launch { fetchAllUserAddresses() }
     }
 
-    private suspend fun fetchAllUserAddresses(userID: String) {
-        val orders = getAllAddressUseCase(ownerID = userID)
-        _addressesList.postValue(orders)
+    private suspend fun fetchAllUserAddresses() {
+        val current = currentUserUseCase()
+
+        if (current != null) {
+            _addressesList.value = current.addresses
+        }
     }
 }

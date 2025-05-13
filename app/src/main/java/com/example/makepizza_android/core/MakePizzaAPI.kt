@@ -40,7 +40,7 @@ object MakePizzaAPI {
             it.addInterceptor(ConnectionInterceptor())
             it.addInterceptor(AuthInterceptor())
             it.addNetworkInterceptor(CacheInterceptor())
-            it.addNetworkInterceptor(UserCacheInterceptor())
+            it.addNetworkInterceptor(UserDefinedCacheInterceptor())
             it.addNetworkInterceptor(ElementDetailsCacheInterceptor())
             it.connectTimeout(20L, TimeUnit.SECONDS)
             it.readTimeout(20L, TimeUnit.SECONDS)
@@ -85,15 +85,15 @@ class CacheInterceptor() : Interceptor {
     }
 }
 
-class UserCacheInterceptor(): Interceptor {
+class UserDefinedCacheInterceptor() : Interceptor {
     private val cacheableURLs = listOf(
-        "/users/current",
+        "/pizzas/user-defined/fetch-all",
     )
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val url = request.url().encodedPath().toString()
-        val shouldCache = cacheableURLs.any { url.contains(it) }
+        val shouldCache = cacheableURLs.any { url.endsWith(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")
 
@@ -101,7 +101,7 @@ class UserCacheInterceptor(): Interceptor {
             response
         } else {
             response.newBuilder().also {
-                it.header("Cache-Control", "public, max-age=${5 * 60}")
+                it.header("Cache-Control", "public, max-age=${15}")
             }.build()
         }
     }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,7 +49,7 @@ class AddressScreen(val userID: String) : Screen {
         DisposableEffect(lifecycleOwner) {
             val observer = LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_RESUME) {
-                    viewmodel.getAllUserAddresses(userID)
+                    viewmodel.getAllUserAddresses()
                 }
             }
 
@@ -99,8 +98,7 @@ class AddressScreen(val userID: String) : Screen {
 
         LazyColumn(
             modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(vertical = 16.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(addresses) { AddressItem(it) }
         }
@@ -133,7 +131,7 @@ class AddressScreen(val userID: String) : Screen {
                 onClickLabel = "Opciones",
                 onClick = {},
                 role = Role.Button
-            ).men
+            )
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),

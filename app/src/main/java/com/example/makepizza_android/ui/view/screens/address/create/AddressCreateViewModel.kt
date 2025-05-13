@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.makepizza_android.domain.models.Address
-import com.example.makepizza_android.domain.usecases.address.CreateAddressUseCase
+import com.example.makepizza_android.domain.usecases.address.CreateAddress
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ class AddressCreateViewModel : ViewModel() {
     private val _uiState = MutableStateFlow<AddressCreateViewState>(AddressCreateViewState.Nothing)
     val uiState = _uiState.asStateFlow()
 
-    private val createAddressUseCase = CreateAddressUseCase()
+    private val createAddressUseCase = CreateAddress()
 
     fun handleAddressValueOnChange(value: String) {
         _shippingAddressValue.value = value

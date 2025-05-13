@@ -1,5 +1,6 @@
 package com.example.makepizza_android.ui.view.tabs.account
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,19 +39,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.example.makepizza_android.data.remote.models.UserModel
-import com.example.makepizza_android.ui.theme.ApplicationTheme
+import com.example.makepizza_android.domain.models.User
+
 import com.example.makepizza_android.ui.view.common.LoginRequired
 import com.example.makepizza_android.ui.view.screens.address.list.AddressScreen
 import com.example.makepizza_android.ui.view.screens.login.LoginScreen
@@ -59,17 +60,26 @@ object AccountTab : Tab {
         @Composable
         get() = _GetTabOptions()
 
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalVoyagerApi::class)
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val viewModel = viewModel<AccountTabViewModel>()
+        val lifecycleOwner = LocalLifecycleOwner.current
         val contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(
             NavigationBarDefaults.windowInsets
         )
-        val viewmodel = viewModel<AccountTabViewModel>()
 
-        LifecycleEffectOnce {
-            viewmodel.fetchAllData()
+        DisposableEffect(lifecycleOwner) {
+            val observer = LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_RESUME) {
+                    viewModel.fetchCurrentUserData()
+                    Log.d("AccountTab", "Resume")
+                }
+            }
+
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
         }
 
         Scaffold(
@@ -79,7 +89,7 @@ object AccountTab : Tab {
         ) {
             TabContent(
                 modifier = Modifier.padding(it),
-                viewmodel = viewmodel
+                viewModel = viewModel
             )
         }
     }
@@ -99,14 +109,17 @@ object AccountTab : Tab {
     }
 
     @Composable
-    fun TabContent(viewmodel: AccountTabViewModel, modifier: Modifier = Modifier) {
+    fun TabContent(
+        viewModel: AccountTabViewModel,
+        modifier: Modifier = Modifier
+    ) {
         val navigator = LocalNavigator.current?.parent
-        val uiState = viewmodel.uiState.collectAsStateWithLifecycle()
-        val isLoading = when (uiState.value) {
+        val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+        val isLoading = when (uiState) {
             AccountTabState.Loading -> true
             else -> false
         }
-        val userLogged = when (uiState.value) {
+        val userLogged = when (uiState) {
             AccountTabState.Success(hasCurrentUser = true) -> true
             AccountTabState.Success(hasCurrentUser = false) -> false
             else -> false
@@ -116,7 +129,7 @@ object AccountTab : Tab {
             ShowLoading(modifier = modifier)
         } else {
             if (userLogged) {
-                ShowProfileInfo(modifier = modifier, viewmodel = viewmodel)
+                ShowProfileInfo(modifier = modifier, viewModel = viewModel)
             } else {
                 LoginRequired(toLogin = { navigator?.push(LoginScreen()) }, modifier = modifier)
             }
@@ -137,8 +150,8 @@ object AccountTab : Tab {
     }
 
     @Composable
-    private fun ShowProfileInfo(viewmodel: AccountTabViewModel, modifier: Modifier = Modifier) {
-        val current = viewmodel.currentUser.observeAsState().value
+    private fun ShowProfileInfo(viewModel: AccountTabViewModel, modifier: Modifier = Modifier) {
+        val current = viewModel.currentUser.observeAsState().value
 
         if (current != null) {
             LazyColumn(
@@ -146,18 +159,18 @@ object AccountTab : Tab {
             ) {
                 item { ProfileInfo(current) }
                 item { Spacer(modifier = Modifier.height(20.dp)) }
-                item { AccountOptions(viewmodel) }
+                item { AccountOptions(current) }
                 item { LegalOptions() }
-                item { LogoutButton(onClick = { viewmodel.handleUserLogout() }) }
+                item { LogoutButton(onClick = { viewModel.handleUserLogout() }) }
             }
         }
     }
 
     @Composable
-    private fun ProfileInfo(data: UserModel) {
-        val username = data.name
-        val uid = data.uid
-        val email = data.email
+    private fun ProfileInfo(current: User) {
+        val username = current.name
+        val uid = current.uid
+        val email = current.email
 
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -182,44 +195,44 @@ object AccountTab : Tab {
     }
 
     @Composable
-    private fun AccountOptions(viewmodel: AccountTabViewModel) {
+    private fun AccountOptions(current: User) {
         val navigator = LocalNavigator.currentOrThrow.parent
-        val current = viewmodel.currentUser.observeAsState().value!!
 
         Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 0.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp),
             text = "Opciones",
             style = MaterialTheme.typography.titleMedium
         )
         Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-                .clip(MaterialTheme.shapes.medium)
+            modifier = Modifier.fillMaxWidth().padding(16.dp).clip(MaterialTheme.shapes.medium)
         ) {
             ListItem(
                 headlineContent = { Text("Pedidos") },
-                modifier = Modifier.clickable (enabled = true) {  }
+                modifier = Modifier.clickable(enabled = true) {
+
+                }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Dirección de envío") },
-                modifier = Modifier.clickable (enabled = true) { navigator?.push(AddressScreen(current.uid)) }
+                modifier = Modifier.clickable(enabled = true) {
+                    navigator?.push(AddressScreen(current.uid))
+                }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Notificaciones") },
-                modifier = Modifier.clickable (enabled = true) {  }
+                modifier = Modifier.clickable(enabled = true) { }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Editar perfil") },
-                modifier = Modifier.clickable (enabled = true) {  }
+                modifier = Modifier.clickable(enabled = true) { }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Ayuda") },
-                modifier = Modifier.clickable (enabled = true) {  }
+                modifier = Modifier.clickable(enabled = true) { }
             )
         }
     }
@@ -267,10 +280,4 @@ object AccountTab : Tab {
     }
 
     private fun readResolve(): Any = AccountTab
-}
-
-@Preview(device = Devices.PIXEL_6, showSystemUi = true)
-@Composable
-private fun AccountTabPreview() {
-    ApplicationTheme { AccountTab.Content() }
 }
