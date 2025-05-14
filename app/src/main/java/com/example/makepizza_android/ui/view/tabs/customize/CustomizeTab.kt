@@ -1,8 +1,12 @@
 package com.example.makepizza_android.ui.view.tabs.customize
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,6 +21,7 @@ import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -24,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -158,10 +164,24 @@ object CustomizeTab : Tab {
         navigateTo: (uid: String) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        LazyColumn(
-            modifier = modifier
-        ) {
-            items(data) { PizzaListItem(it, { navigateTo(it.uid) }) }
+        if (data.isEmpty()) {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "No hay datos"
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                TextButton(onClick = {}) { Text(text = "Crear Pizza") }
+            }
+        } else {
+            LazyColumn(
+                modifier = modifier
+            ) {
+                items(data) { PizzaListItem(it, { navigateTo(it.uid) }) }
+            }
         }
     }
 

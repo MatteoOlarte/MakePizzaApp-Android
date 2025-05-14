@@ -12,8 +12,8 @@ data class User(
     val isAdmin: Boolean,
     val createdAt: Date,
     val updatedAt: Date,
-    val address: Address?,
-    val addresses: List<Address> = emptyList()
+    var address: Address?,
+    var addresses: List<Address> = emptyList()
 )
 
 fun UserDataModel.toDomainModel() = User(
