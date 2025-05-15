@@ -37,6 +37,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,18 +63,21 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
     @Composable
     override fun Content() {
         val viewmodel = viewModel<PizzaDetailViewModel>()
+        val uiState = viewmodel.uiState.collectAsStateWithLifecycle().value
+        val navigator = LocalNavigator.current
 
-        LifecycleEffectOnce {
-            viewmodel.fetchPizzaModel(uid, isCustom)
-        }
+        LifecycleEffectOnce { viewmodel.fetchData(uid, isCustom) }
+
+        LaunchedEffect(uiState) { if (uiState == PizzaDetailViewState.CartClicked) navigator?.pop() }
 
         Scaffold(
             topBar = { ScreenTopBar() },
-            bottomBar = { ScreenBottomBar() }
+            bottomBar = { ScreenBottomBar(viewmodel) }
         ) {
             ScreenContent(
                 modifier = Modifier.padding(it),
-                viewmodel = viewmodel
+                viewmodel = viewmodel,
+                uiState = uiState
             )
         }
     }
@@ -94,13 +98,18 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
     }
 
     @Composable
-    private fun ScreenBottomBar() {
+    private fun ScreenBottomBar(
+        viewModel: PizzaDetailViewModel,
+        modifier: Modifier = Modifier
+    ) {
         Column {
             HorizontalDivider(
                 thickness = 1.dp,
                 color = MaterialTheme.colorScheme.surfaceContainerLow
             )
+
             BottomAppBar(
+                modifier = modifier,
                 containerColor = MaterialTheme.colorScheme.background,
                 tonalElevation = 0.dp
             ) {
@@ -115,13 +124,15 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
                             modifier = Modifier.size(ButtonDefaults.IconSize)
                         )
                     }
+
                     Spacer(
                         modifier = Modifier.width(8.dp)
                     )
-                    Button(onClick = {}) {
+
+                    Button(onClick = { viewModel.handleAddToCartClick() }) {
                         Icon(
                             Icons.Filled.ShoppingCart,
-                            contentDescription = "Favorite",
+                            "",
                             modifier = Modifier.size(ButtonDefaults.IconSize)
                         )
                         Spacer(Modifier.size(ButtonDefaults.IconSpacing))
@@ -133,28 +144,31 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
     }
 
     @Composable
-    private fun ScreenContent(viewmodel: PizzaDetailViewModel, modifier: Modifier = Modifier) {
-        val uiState = viewmodel.uiState.collectAsStateWithLifecycle()
+    private fun ScreenContent(
+        viewmodel: PizzaDetailViewModel,
+        uiState: PizzaDetailViewState,
+        modifier: Modifier = Modifier
+    ) {
         val data = viewmodel.currentPizzaModel.observeAsState().value
 
-        val isLoading = when (uiState.value) {
-            PizzaDetailViewState.Success -> false
-            else -> true
+        val isLoading = when (uiState) {
+            PizzaDetailViewState.Loading -> true
+            PizzaDetailViewState.Error -> true
+            else -> false
         }
 
         if (isLoading || data == null) {
             ShowLoading(modifier = modifier)
-            return
-        }
-
-        LazyColumn(
-            modifier = modifier,
-            contentPadding = PaddingValues(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item { Image(data) }
-            item { Info(data) }
-            this.showPizzaIngredients(data)
+        } else {
+            LazyColumn(
+                modifier = modifier,
+                contentPadding = PaddingValues(vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item { Image(data) }
+                item { Info(data) }
+                this.showPizzaIngredients(data)
+            }
         }
     }
 
@@ -213,6 +227,56 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
+        }
+    }
+
+    @Composable
+    private fun IngredientListItem(data: IngredientModel, modifier: Modifier = Modifier) {
+        Box(
+            modifier = modifier
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 0.dp, vertical = 0.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Surface(
+                    modifier = Modifier.height(45.dp).width(45.dp),
+                    shape = RoundedCornerShape(5.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_launcher_background),
+                        contentDescription = "contentDescription",
+                        contentScale = ContentScale.Companion.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = data.name,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Normal
+                            ),
+                            maxLines = 1,
+                            overflow = TextOverflow.Visible
+                        )
+                        Text(
+                            text = "$${data.price}",
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -279,56 +343,6 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
 
         this.items(data.ingredients) {
             IngredientListItem(it, modifier = Modifier.padding(horizontal = 16.dp))
-        }
-    }
-
-    @Composable
-    private fun IngredientListItem(data: IngredientModel, modifier: Modifier = Modifier) {
-        Box(
-            modifier = modifier
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 0.dp, vertical = 0.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Surface(
-                    modifier = Modifier.height(45.dp).width(45.dp),
-                    shape = RoundedCornerShape(5.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_background),
-                        contentDescription = "contentDescription",
-                        contentScale = ContentScale.Companion.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            modifier = Modifier.weight(1f),
-                            text = data.name,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Normal
-                            ),
-                            maxLines = 1,
-                            overflow = TextOverflow.Visible
-                        )
-                        Text(
-                            text = "$${data.price}",
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                fontWeight = FontWeight.SemiBold
-                            ),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
-            }
         }
     }
 }

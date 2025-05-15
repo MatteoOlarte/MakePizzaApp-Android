@@ -4,4 +4,5 @@ sealed class PizzaDetailViewState {
     object Loading: PizzaDetailViewState()
     object Success: PizzaDetailViewState()
     object Error: PizzaDetailViewState()
+    object CartClicked: PizzaDetailViewState()
 }

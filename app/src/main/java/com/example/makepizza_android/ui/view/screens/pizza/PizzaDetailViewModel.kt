@@ -21,15 +21,15 @@ class PizzaDetailViewModel : ViewModel() {
 
     private val pizzaRepository = PizzaRepository()
 
-    fun fetchPizzaModel(uid: String, isCustom: Boolean) {
-        viewModelScope.launch { fetchPizzaModelOrError(uid, isCustom) }
+    fun fetchData(uid: String, isCustom: Boolean) {
+        viewModelScope.launch { fetchDataImpl(uid, isCustom) }
     }
 
     fun handleAddToCartClick() {
-
+        _uiState.value = PizzaDetailViewState.CartClicked
     }
 
-    private suspend fun fetchPizzaModelOrError(uid: String, isCustom: Boolean) {
+    private suspend fun fetchDataImpl(uid: String, isCustom: Boolean) {
         _uiState.value = PizzaDetailViewState.Loading
 
         try {
@@ -49,5 +49,9 @@ class PizzaDetailViewModel : ViewModel() {
             Log.e("PizzaDetailViewModel", ex.message!!)
             _uiState.value = PizzaDetailViewState.Error
         }
+    }
+
+    private suspend fun addItemToCartImpl() {
+
     }
 }
