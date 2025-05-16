@@ -13,11 +13,11 @@ import com.example.makepizza_android.data.local.entity.UserEntity
 @Dao
 interface UserDAO {
     @Transaction
-    @Query("select * from users where user_id = :userID")
+    @Query("select * from Users where user_id = :userID")
     suspend fun getEntityByID(userID: String): UserEntity?
 
     @Transaction
-    @Query("select * from users where user_id = :userID")
+    @Query("select * from Users where user_id = :userID")
     suspend fun getModelByID(userID: String): UserDataModel?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

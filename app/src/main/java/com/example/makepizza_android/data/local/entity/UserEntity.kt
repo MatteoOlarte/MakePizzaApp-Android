@@ -9,7 +9,7 @@ import androidx.room.Relation
 import java.util.Date
 
 @Entity(
-    tableName = "users",
+    tableName = "Users",
     foreignKeys = [
         ForeignKey(
             entity = AddressEntity::class,

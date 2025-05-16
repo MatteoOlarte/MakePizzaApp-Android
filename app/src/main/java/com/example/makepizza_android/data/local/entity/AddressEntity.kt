@@ -8,7 +8,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "shipping_addresses",
+    tableName = "Addresses",
     indices = [
         Index(value = ["user_id"])
     ],
@@ -21,6 +21,7 @@ import androidx.room.PrimaryKey
         )
     ]
 )
+
 data class AddressEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "address_id") val id: Int = 0,

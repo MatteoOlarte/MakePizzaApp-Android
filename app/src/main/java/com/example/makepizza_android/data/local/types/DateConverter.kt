@@ -1,16 +1,23 @@
 package com.example.makepizza_android.data.local.types
 
 import androidx.room.TypeConverter
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class DateConverter {
-    @TypeConverter
-    fun fromTimestamp(value: Long?): Date? {
-        return value?.let { Date(it) }
+    private val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
+        timeZone = TimeZone.getTimeZone("UTC")
     }
 
     @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time
+    fun from(date: Date?): String? {
+        return date?.let { formatter.format(it) }
+    }
+
+    @TypeConverter
+    fun to(dateString: String?): Date? {
+        return dateString?.let { formatter.parse(it) }
     }
 }

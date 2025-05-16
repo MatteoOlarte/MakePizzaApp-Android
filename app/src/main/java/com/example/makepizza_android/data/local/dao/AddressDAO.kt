@@ -13,11 +13,11 @@ import com.example.makepizza_android.data.local.entity.AddressEntity
 @Dao
 interface AddressDAO {
     @Transaction
-    @Query("select * from shipping_addresses where address_id = :addressID")
+    @Query("select * from Addresses where address_id = :addressID")
     suspend fun getEntityByID(addressID: Int): AddressEntity
 
     @Transaction
-    @Query("select * from shipping_addresses where address_id = :addressID")
+    @Query("select * from Addresses where address_id = :addressID")
     suspend fun getModelByID(addressID: Int): AddressDataModel
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
