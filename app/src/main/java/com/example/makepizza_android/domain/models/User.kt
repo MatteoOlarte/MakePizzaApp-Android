@@ -12,7 +12,7 @@ data class User(
     val isAdmin: Boolean,
     val createdAt: Date,
     val updatedAt: Date,
-    val cartItems: List<CartItem>,
+    val shoppingCart: List<Cart> = emptyList(),
     var address: Address?,
     var addresses: List<Address> = emptyList()
 )
@@ -26,7 +26,7 @@ fun UserDataModel.toDomainModel() = User(
     updatedAt = this.user.updatedAt,
     address = this.address?.toDomainModel(),
     addresses = this.addresses.map { it.toDomainModel() },
-    cartItems = this.cartItems.map { it.toDomainModel() },
+    shoppingCart = this.cartItems.map { it.toDomainModel() },
 )
 
 fun UserModel.toDomainModel() = User(
@@ -36,9 +36,7 @@ fun UserModel.toDomainModel() = User(
     isAdmin = this.isAdmin,
     createdAt = this.createdAt,
     updatedAt = this.updatedAt,
-    cartItems = emptyList(),
-    address = null,
-    addresses = emptyList()
+    address = null
 )
 
 fun User.toEntityModel() = UserEntity(

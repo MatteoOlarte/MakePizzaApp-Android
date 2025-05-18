@@ -10,7 +10,7 @@ import com.example.makepizza_android.data.repository.PizzaRepository
 import com.example.makepizza_android.domain.models.CartItem
 import com.example.makepizza_android.domain.models.User
 import com.example.makepizza_android.domain.models.toDomainModel
-import com.example.makepizza_android.domain.usecases.cart.InsertItemTo
+import com.example.makepizza_android.domain.usecases.cart.InsertItem
 import com.example.makepizza_android.domain.usecases.user.CurrentUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +24,7 @@ class PizzaDetailViewModel : ViewModel() {
     private val _uiState = MutableStateFlow<PizzaDetailViewState>(PizzaDetailViewState.Loading)
     val uiState: StateFlow<PizzaDetailViewState> = _uiState.asStateFlow()
 
-    private val addItemToCartUseCase = InsertItemTo()
+    private val addItemToCartUseCase = InsertItem()
 
     private val currentUserUseCase = CurrentUser()
 

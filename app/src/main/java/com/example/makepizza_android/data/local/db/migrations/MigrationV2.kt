@@ -1,4 +1,4 @@
-package com.example.makepizza_android.data.local.db
+package com.example.makepizza_android.data.local.db.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase

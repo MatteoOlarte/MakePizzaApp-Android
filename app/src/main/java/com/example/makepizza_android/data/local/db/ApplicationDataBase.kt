@@ -4,23 +4,23 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.makepizza_android.data.local.dao.AddressDAO
-import com.example.makepizza_android.data.local.dao.ShoppingCartDao
+import com.example.makepizza_android.data.local.dao.CartDAO
+import com.example.makepizza_android.data.local.dao.CartItemDAO
 import com.example.makepizza_android.data.local.dao.UserDAO
 import com.example.makepizza_android.data.local.entity.AddressEntity
+import com.example.makepizza_android.data.local.entity.CartEntity
 import com.example.makepizza_android.data.local.entity.CartItemEntity
-import com.example.makepizza_android.data.local.entity.ShoppingCart
 import com.example.makepizza_android.data.local.entity.UserEntity
 import com.example.makepizza_android.data.local.types.DateConverter
-
 
 @Database(
     entities = [
         UserEntity::class,
         AddressEntity::class,
-        ShoppingCart::class,
+        CartEntity::class,
         CartItemEntity::class
     ],
-    version = 2
+    version = 3
 )
 @TypeConverters(DateConverter::class)
 abstract class ApplicationDataBase : RoomDatabase() {
@@ -28,5 +28,7 @@ abstract class ApplicationDataBase : RoomDatabase() {
 
     abstract fun getUserDAO(): UserDAO
 
-    abstract fun getShoppingCartDAO(): ShoppingCartDao
+    abstract fun getCartDAO(): CartDAO
+
+    abstract fun getCartItemDAO(): CartItemDAO
 }

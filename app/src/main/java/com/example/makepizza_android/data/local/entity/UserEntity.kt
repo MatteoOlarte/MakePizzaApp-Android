@@ -5,7 +5,6 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.util.Date
@@ -45,22 +44,25 @@ data class UserEntity(
 
 data class UserDataModel(
     @Embedded val user: UserEntity,
+
     @Relation(
         parentColumn = "user_id",
-        entityColumn = "user_id"
+        entityColumn = "user_id",
+        entity = AddressEntity::class
     )
     val addresses: List<AddressEntity>,
 
     @Relation(
         parentColumn = "active_address",
         entityColumn = "address_id",
+        entity = AddressEntity::class
     )
     val address: AddressEntity?,
 
     @Relation(
         parentColumn = "user_id",
-        entityColumn = "item_id",
-        associateBy = Junction(ShoppingCart::class)
+        entityColumn = "user_id",
+        entity = CartEntity::class
     )
-    val cartItems: List<CartItemEntity> = emptyList()
+    val cartItems: List<CartDataModel> = emptyList()
 )

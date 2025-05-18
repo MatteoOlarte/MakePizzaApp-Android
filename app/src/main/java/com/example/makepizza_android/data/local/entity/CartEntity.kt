@@ -1,36 +1,21 @@
 package com.example.makepizza_android.data.local.entity
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.util.Date
-
-@Entity(
-    tableName = "CartItem"
-)
-data class CartItemEntity(
-    @PrimaryKey(autoGenerate = false)
-    @ColumnInfo(name = "item_id") val id: String = "",
-
-    @ColumnInfo(name = "name") val name: String,
-
-    @ColumnInfo(name = "desc") val desc: String?,
-
-    @ColumnInfo(name = "price") val price: Float,
-
-    @ColumnInfo(name = "size") val size: String,
-
-    @ColumnInfo(name = "cached_at") val cachedAt: Date = Date()
-)
+import androidx.room.Relation
 
 @Entity(
     tableName = "ShoppingCart",
-    primaryKeys = ["user_id", "item_id"],
     indices = [
-        Index("user_id", name = "ix_ShoppingCart_user_id"),
-        Index("item_id", name = "ix_ShoppingCart_item_id")
+        Index(
+            value = ["user_id", "item_id"],
+            name = "ix_unq_ShoppingCart_UserID_ItemID",
+            unique = true
+        )
     ],
     foreignKeys = [
         ForeignKey(
@@ -47,7 +32,22 @@ data class CartItemEntity(
         )
     ]
 )
-data class ShoppingCart(
+data class CartEntity(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "cart_id") val id: Int = 0,
+
     @ColumnInfo(name = "user_id") val userId: String,
+
     @ColumnInfo(name = "item_id") val itemId: String
+)
+
+data class CartDataModel(
+    @Embedded val shoppingCart: CartEntity,
+
+    @Relation(
+        parentColumn = "item_id",
+        entityColumn = "item_id",
+        entity = CartItemEntity::class
+    )
+    val item: CartItemEntity
 )

@@ -21,16 +21,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.makepizza_android.domain.models.Cart
 import com.example.makepizza_android.domain.models.CartItem
 import java.text.NumberFormat
 import java.util.Locale
 
 @Composable
 fun ShoppingCartItemView(
-    data: CartItem,
+    data: Cart,
     checked: Boolean,
     onCheckedChange: (value: Boolean) -> Unit,
-    onDeleteClick: (item: CartItem) -> Unit,
+    onDeleteClick: (item: Cart) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -44,10 +45,10 @@ fun ShoppingCartItemView(
 
 @Composable
 private fun ItemContent(
-    data: CartItem,
+    data: Cart,
     checked: Boolean,
     onCheckedChange: (value: Boolean) -> Unit,
-    onDeleteClick: (item: CartItem) -> Unit,
+    onDeleteClick: (item: Cart) -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
@@ -61,8 +62,8 @@ private fun ItemContent(
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            ItemNameAndPrice(data)
-            ItemDescription(data)
+            ItemNameAndPrice(data.item)
+            ItemDescription(data.item)
         }
 
         IconButton(

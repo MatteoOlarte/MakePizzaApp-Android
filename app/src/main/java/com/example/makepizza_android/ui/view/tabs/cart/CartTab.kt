@@ -39,10 +39,13 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.example.makepizza_android.domain.models.CartItem
+import com.example.makepizza_android.domain.models.Cart
 import com.example.makepizza_android.ui.view.common.ShoppingCartItemView
+import com.example.makepizza_android.ui.view.screens.checkout.CheckOutScreen
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -99,7 +102,7 @@ object CartTab : Tab {
         viewModel: CartTabViewModel,
         modifier: Modifier = Modifier
     ) {
-        val itemsSize = viewModel.itemsLength.observeAsState(initial = 0).value
+        val itemsSize = viewModel.cartLength.observeAsState(initial = 0).value
 
         TopAppBar(
             modifier = modifier,
@@ -113,7 +116,7 @@ object CartTab : Tab {
         uiState: CartTabViewState,
         modifier: Modifier = Modifier
     ) {
-        val cartItems = viewModel.items.observeAsState(initial = emptyMap()).value
+        val cartItems = viewModel.cart.observeAsState(initial = emptyMap()).value
 
         Column(
             modifier = modifier.fillMaxSize()
@@ -171,6 +174,7 @@ object CartTab : Tab {
         viewModel: CartTabViewModel,
         uiState: CartTabViewState
     ) {
+        val navigator = LocalNavigator.currentOrThrow.parent
         val total = viewModel.total.observeAsState().value
         val loading = when (uiState) {
             CartTabViewState.Loading -> true
@@ -193,7 +197,7 @@ object CartTab : Tab {
             )
 
             Button(
-                onClick = {},
+                onClick = {navigator?.push(CheckOutScreen())},
                 enabled = !(loading || total == 0.0)
             ) {
                 Text(text = "Continuar")
@@ -203,7 +207,7 @@ object CartTab : Tab {
 
     private fun LazyListScope.addCartItems(
         viewModel: CartTabViewModel,
-        cartItems: Map<CartItem, Boolean>
+        cartItems: Map<Cart, Boolean>
     ) {
         items(cartItems.toList()) { (item, isChecked) ->
             ShoppingCartItemView(
