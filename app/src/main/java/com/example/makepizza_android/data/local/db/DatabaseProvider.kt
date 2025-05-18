@@ -13,7 +13,7 @@ object DatabaseProvider {
                 context = context.applicationContext,
                 klass = ApplicationDataBase::class.java,
                 name = "database.db"
-            ).build()
+            ).addMigrations(MigrationV2()).build()
             INSTANCE = instance
             instance
         }

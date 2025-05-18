@@ -21,7 +21,7 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.example.makepizza_android.ui.view.tabs.account.AccountTab
-import com.example.makepizza_android.ui.view.tabs.coupons.CouponsTab
+import com.example.makepizza_android.ui.view.tabs.cart.CartTab
 import com.example.makepizza_android.ui.view.tabs.customize.CustomizeTab
 import com.example.makepizza_android.ui.view.tabs.store.StoreTab
 
@@ -50,7 +50,7 @@ class HomeScreen : Screen {
             ) {
                 TabNavigationItem(StoreTab)
                 TabNavigationItem(CustomizeTab)
-                TabNavigationItem(CouponsTab)
+                TabNavigationItem(CartTab)
                 TabNavigationItem(AccountTab)
             }
         }

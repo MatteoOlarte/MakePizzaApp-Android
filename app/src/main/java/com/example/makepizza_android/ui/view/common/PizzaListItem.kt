@@ -33,6 +33,8 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
 fun PizzaListItem(
@@ -40,6 +42,11 @@ fun PizzaListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val format = NumberFormat.getNumberInstance(Locale.US).apply {
+        minimumFractionDigits = 2
+        maximumFractionDigits = 2
+    }.format(pizzaModel.price.times(4200))
+
     Card(
         colors = CardDefaults.cardColors().copy(containerColor = Color.Transparent),
         shape = RoundedCornerShape(0.dp),
@@ -71,7 +78,7 @@ fun PizzaListItem(
                             overflow = TextOverflow.Visible
                         )
                         Text(
-                            text = "$${pizzaModel.price}",
+                            text = "$$format",
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 fontWeight = FontWeight.SemiBold
                             ),

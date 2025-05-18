@@ -4,12 +4,17 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.util.Date
 
 @Entity(
     tableName = "Users",
+    indices = [
+        Index("active_address", name = "ix_Users_active_address")
+    ],
     foreignKeys = [
         ForeignKey(
             entity = AddressEntity::class,
@@ -50,5 +55,12 @@ data class UserDataModel(
         parentColumn = "active_address",
         entityColumn = "address_id",
     )
-    val address: AddressEntity?
+    val address: AddressEntity?,
+
+    @Relation(
+        parentColumn = "user_id",
+        entityColumn = "item_id",
+        associateBy = Junction(ShoppingCart::class)
+    )
+    val cartItems: List<CartItemEntity> = emptyList()
 )
