@@ -52,6 +52,7 @@ import com.example.makepizza_android.ui.view.common.ContentLoading
 import com.example.makepizza_android.ui.view.common.LoginRequired
 import com.example.makepizza_android.ui.view.screens.address.list.AddressScreen
 import com.example.makepizza_android.ui.view.screens.login.LoginScreen
+import com.example.makepizza_android.ui.view.screens.orders.OrderScreen
 
 object AccountTab : Tab {
     override val options: TabOptions
@@ -194,7 +195,7 @@ object AccountTab : Tab {
             ListItem(
                 headlineContent = { Text("Pedidos") },
                 modifier = Modifier.clickable(enabled = true) {
-
+                    navigator?.push(OrderScreen())
                 }
             )
             HorizontalDivider()
@@ -207,17 +208,17 @@ object AccountTab : Tab {
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Notificaciones") },
-                modifier = Modifier.clickable(enabled = true) { }
+                modifier = Modifier.clickable(enabled = false) { }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Editar perfil") },
-                modifier = Modifier.clickable(enabled = true) { }
+                modifier = Modifier.clickable(enabled = false) { }
             )
             HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Ayuda") },
-                modifier = Modifier.clickable(enabled = true) { }
+                modifier = Modifier.clickable(enabled = false) { }
             )
         }
     }
