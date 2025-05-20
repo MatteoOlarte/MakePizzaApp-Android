@@ -32,7 +32,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 
-class AddressCreateScreen(val userID: String) : Screen {
+class   AddressCreateScreen(val userID: String) : Screen {
     @Composable
     override fun Content() {
         val viewmodel = viewModel<AddressCreateViewModel>()

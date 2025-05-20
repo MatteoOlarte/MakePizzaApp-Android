@@ -2,6 +2,9 @@ package com.example.makepizza_android.data.remote.network
 
 import com.example.makepizza_android.core.MakePizzaAPI
 import com.example.makepizza_android.data.remote.models.IngredientListModel
+import com.example.makepizza_android.data.remote.models.OrderCreate
+import com.example.makepizza_android.data.remote.models.OrderModel
+import com.example.makepizza_android.data.remote.models.OrderUpdate
 import com.example.makepizza_android.data.remote.models.PizzaListModel
 import com.example.makepizza_android.data.remote.models.PizzaModel
 import com.example.makepizza_android.data.remote.models.UserModel
@@ -16,10 +19,6 @@ class MakePizzaAPIService {
             val response = retrofit.create(IMakePizzaAPIClient::class.java).getCurrentUser()
             response.body()
         }
-    }
-
-    suspend fun getIngredient() {
-
     }
 
     suspend fun getAllIngredients(): List<IngredientListModel> {
@@ -54,6 +53,27 @@ class MakePizzaAPIService {
         return withContext(Dispatchers.IO) {
             val response = retrofit.create(IMakePizzaAPIClient::class.java).getAllPizzasFromUser()
             response.body() ?: emptyList()
+        }
+    }
+
+    suspend fun createOrder(orderCreate: OrderCreate): OrderModel? {
+        return withContext(Dispatchers.IO) {
+            val response = retrofit.create(IMakePizzaAPIClient::class.java).createOrder(orderCreate)
+            response.body()
+        }
+    }
+
+    suspend fun getOrder(uid: String): OrderModel? {
+        return withContext(Dispatchers.IO) {
+            val response = retrofit.create(IMakePizzaAPIClient::class.java).getOrder(uid)
+            response.body()
+        }
+    }
+
+    suspend fun editOrder(uid: String, orderUpdate: OrderUpdate): OrderModel? {
+        return withContext(Dispatchers.IO) {
+            val response = retrofit.create(IMakePizzaAPIClient::class.java).editOrder(uid, orderUpdate)
+            response.body()
         }
     }
 }

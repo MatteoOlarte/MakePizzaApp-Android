@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -34,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -50,7 +48,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.makepizza_android.domain.models.User
-
+import com.example.makepizza_android.ui.view.common.ContentLoading
 import com.example.makepizza_android.ui.view.common.LoginRequired
 import com.example.makepizza_android.ui.view.screens.address.list.AddressScreen
 import com.example.makepizza_android.ui.view.screens.login.LoginScreen
@@ -126,26 +124,13 @@ object AccountTab : Tab {
         }
 
         if (isLoading) {
-            ShowLoading(modifier = modifier)
+            ContentLoading(modifier = modifier)
         } else {
             if (userLogged) {
                 ShowProfileInfo(modifier = modifier, viewModel = viewModel)
             } else {
                 LoginRequired(toLogin = { navigator?.push(LoginScreen()) }, modifier = modifier)
             }
-        }
-    }
-
-    @Composable
-    private fun ShowLoading(modifier: Modifier = Modifier) {
-        Column(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator()
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Cargando Datos...")
         }
     }
 

@@ -18,7 +18,7 @@ class CurrentUser {
         val userDB = repository.getUserModel(userID)
 
         if (userDB == null) {
-            val userAPI = repository.fetchCurrent()
+            val userAPI = repository.fetchUserModel()
             return handleDataCashing(userAPI)
         }
         return userDB.toDomainModel()

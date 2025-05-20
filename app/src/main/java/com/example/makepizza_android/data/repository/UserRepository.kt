@@ -24,10 +24,5 @@ class UserRepository {
 
     suspend fun deleteUser(user: UserEntity) = dao.delete(user)
 
-    suspend fun fetchCurrent(): UserModel? = api.getCurrentUser()
-
-    suspend fun getCurrentUser(): UserModel? {
-        val response = api.getCurrentUser()
-        return response
-    }
+    suspend fun fetchUserModel(): UserModel? = api.getCurrentUser()
 }
