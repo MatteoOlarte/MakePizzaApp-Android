@@ -25,16 +25,16 @@ class CheckOutViewModel : ViewModel() {
     private val _currentUser = MutableLiveData<User?>(null)
     val currentUser: LiveData<User?> = _currentUser
 
-    private val _fName = MutableLiveData<String>()
+    private val _fName = MutableLiveData<String>("")
     val fName: LiveData<String> = _fName
 
-    private val _lName = MutableLiveData<String>()
+    private val _lName = MutableLiveData<String>("")
     val lName: LiveData<String> = _lName
 
-    private val _address = MutableLiveData<String>()
+    private val _address = MutableLiveData<String>("")
     val address: LiveData<String> = _address
 
-    private val _phone = MutableLiveData<String>()
+    private val _phone = MutableLiveData<String>("")
     val phone: LiveData<String> = _phone
 
     private val _tip = MutableLiveData<Double>(2000.0)
@@ -66,24 +66,23 @@ class CheckOutViewModel : ViewModel() {
 
     private suspend fun createNewOrderImpl() {
         _uiState.value = CheckOutViewState.Loading
-        val user: User? = currentUserUseCase()
-        val address: Address? = user?.address
+        val user: User = currentUserUseCase()!!
+        val address: Address? = user.address
         val order: Order?
 
-        if (user == null) {
-            _uiState.value = CheckOutViewState.OnError(err = "Login Required")
-            return
-        }
-
         if (address == null) {
-            _uiState.value = CheckOutViewState.OnError(err = "Address Required")
+            _uiState.value = CheckOutViewState.OnError("InvalidAddress")
             return
         }
 
-        order = createOderUseCase(address, user.shoppingCart)
-        _currentOrder.value = order
-        _total.value = order?.totalPrice?.toDouble() ?: 0.0
-        _uiState.value = CheckOutViewState.Success
+        try {
+            order = createOderUseCase(address, user.shoppingCart)
+            _currentOrder.value = order
+            _total.value = order?.totalPrice?.toDouble() ?: 0.0
+            _uiState.value = CheckOutViewState.Success
+        } catch (err: Exception) {
+            _uiState.value = CheckOutViewState.OnError("NetworkError")
+        }
     }
 
     fun handleDoneClick() {

@@ -55,6 +55,7 @@ class ConnectionInterceptor() : Interceptor {
         try {
             return chain.proceed(chain.request())
         } catch (e: IOException) {
+            Log.d("Retrofit", "Network Error: $e")
             throw IOException("Network Error", e)
         }
     }
@@ -74,6 +75,9 @@ class CacheInterceptor() : Interceptor {
         val shouldCache = cacheableURLs.any { url.contains(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")
+
+        Log.d("Retrofit", request.url().toString())
+        Log.d("Retrofit", url)
 
         return if (serverCacheControl?.contains("no-cache") == true || !shouldCache) {
             response
@@ -117,7 +121,6 @@ class ElementDetailsCacheInterceptor(): Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val url = request.url().encodedPath().toString()
-        Log.d("Retrofit", url)
         val shouldCache = cacheableURLs.any { url.endsWith(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")

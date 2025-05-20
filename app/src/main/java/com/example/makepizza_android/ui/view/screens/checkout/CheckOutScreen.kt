@@ -58,7 +58,8 @@ class CheckOutScreen : Screen {
         val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
         val loading = when (uiState) {
             CheckOutViewState.Loading -> true
-            is CheckOutViewState.OnError -> true
+            CheckOutViewState.OnError("NetworkError") -> true
+            CheckOutViewState.OnError("InvalidAddress") -> true
             else -> false
         }
         val navigator = LocalNavigator.current
@@ -75,6 +76,7 @@ class CheckOutScreen : Screen {
 
         LaunchedEffect(uiState) {
             if (uiState == CheckOutViewState.Updated) navigator?.pop()
+            if (uiState == CheckOutViewState.OnError("InvalidAddress")) navigator?.pop()
         }
 
         Scaffold(
