@@ -82,7 +82,7 @@ private fun ItemNameAndPrice(data: CartItem) {
     val format = NumberFormat.getNumberInstance(Locale.US).apply {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
-    }.format(data.price.times(4200))
+    }.format(data.price.times(1))
 
     Row(
         modifier = Modifier.fillMaxWidth(),

@@ -184,7 +184,7 @@ object CartTab : Tab {
         val format = NumberFormat.getNumberInstance(Locale.US).apply {
             minimumFractionDigits = 2
             maximumFractionDigits = 2
-        }.format(total?.times(4200))
+        }.format(total)
 
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),

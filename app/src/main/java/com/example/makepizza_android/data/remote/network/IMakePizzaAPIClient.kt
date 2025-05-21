@@ -2,6 +2,7 @@ package com.example.makepizza_android.data.remote.network
 
 import com.example.makepizza_android.data.remote.models.IngredientListModel
 import com.example.makepizza_android.data.remote.models.OrderCreate
+import com.example.makepizza_android.data.remote.models.OrderListModel
 import com.example.makepizza_android.data.remote.models.OrderModel
 import com.example.makepizza_android.data.remote.models.OrderUpdate
 import com.example.makepizza_android.data.remote.models.PizzaListModel
@@ -41,4 +42,7 @@ interface IMakePizzaAPIClient {
 
     @PUT("/orders")
     suspend fun editOrder(@Query("order_uid") uid: String, @Body orderUpdate: OrderUpdate): Response<OrderModel>
+
+    @GET("/orders/fetch-all/from-current-user")
+    suspend fun getCurrentUserOrders(): Response<List<OrderListModel>>
 }

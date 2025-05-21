@@ -41,7 +41,6 @@ object MakePizzaAPI {
             it.addInterceptor(AuthInterceptor())
             it.addNetworkInterceptor(CacheInterceptor())
             it.addNetworkInterceptor(UserDefinedCacheInterceptor())
-            it.addNetworkInterceptor(ElementDetailsCacheInterceptor())
             it.connectTimeout(20L, TimeUnit.SECONDS)
             it.readTimeout(20L, TimeUnit.SECONDS)
             it.writeTimeout(20L, TimeUnit.SECONDS)
@@ -66,13 +65,16 @@ class CacheInterceptor() : Interceptor {
         "/ingredients/fetch-all",
         "/ingredients/query",
         "/pizzas/fetch-all",
-        "/pizzas/query"
+        "/pizzas/query",
+        "/pizzas",
+        "/ingredients",
+        "/pizzas/user-defined"
     )
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val url = request.url().encodedPath().toString()
-        val shouldCache = cacheableURLs.any { url.contains(it) }
+        val shouldCache = cacheableURLs.any { url.endsWith(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")
 
@@ -83,7 +85,7 @@ class CacheInterceptor() : Interceptor {
             response
         } else {
             response.newBuilder().also {
-                it.header("Cache-Control", "public, max-age=${120 * 60}")
+                it.header("Cache-Control", "public, max-age=${2 * 60}")
             }.build()
         }
     }
@@ -111,30 +113,7 @@ class UserDefinedCacheInterceptor() : Interceptor {
     }
 }
 
-class ElementDetailsCacheInterceptor(): Interceptor {
-    private val cacheableURLs = listOf(
-        "/pizzas",
-        "/ingredients",
-        "/pizzas/user-defined"
-    )
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
-        val url = request.url().encodedPath().toString()
-        val shouldCache = cacheableURLs.any { url.endsWith(it) }
-        val response = chain.proceed(request)
-        val serverCacheControl = response.header("Cache-Control")
-
-        return if (serverCacheControl?.contains("no-cache") == true || !shouldCache) {
-            response
-        } else {
-            response.newBuilder().also {
-                it.header("Cache-Control", "public, max-age=${2 * 60}")
-            }.build()
-        }
-    }
-}
-
+//corregir esto
 class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()

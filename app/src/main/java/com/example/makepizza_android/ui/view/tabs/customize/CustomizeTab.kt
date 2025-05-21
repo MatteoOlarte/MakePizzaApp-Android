@@ -33,8 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -45,7 +43,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.makepizza_android.data.remote.models.PizzaListModel
-import com.example.makepizza_android.ui.theme.ApplicationTheme
 import com.example.makepizza_android.ui.view.common.LoginRequired
 import com.example.makepizza_android.ui.view.common.PizzaListItem
 import com.example.makepizza_android.ui.view.common.PizzaListItemLoading
@@ -196,10 +193,4 @@ object CustomizeTab : Tab {
     }
 
     private fun readResolve(): Any = CustomizeTab
-}
-
-@Preview(device = Devices.PIXEL_6, showSystemUi = true)
-@Composable
-private fun CustomizeTabPreview() {
-    ApplicationTheme { CustomizeTab.Content() }
 }

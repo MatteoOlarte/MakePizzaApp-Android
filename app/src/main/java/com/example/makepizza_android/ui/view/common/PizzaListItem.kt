@@ -45,7 +45,7 @@ fun PizzaListItem(
     val format = NumberFormat.getNumberInstance(Locale.US).apply {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
-    }.format(pizzaModel.price.times(4200))
+    }.format(pizzaModel.price.times(1))
 
     Card(
         colors = CardDefaults.cardColors().copy(containerColor = Color.Transparent),

@@ -3,7 +3,7 @@ package com.example.makepizza_android.data.remote.models
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-data class OrderModel (
+data class OrderModel(
     @SerializedName("uid") val uid: String,
     @SerializedName("delivery_address") val deliveryAddress: String,
     @SerializedName("tip_amount") val tipAmount: Float,
@@ -24,4 +24,13 @@ data class OrderCreate(
 data class OrderUpdate(
     @SerializedName("delivery_address") val deliveryAddress: String,
     @SerializedName("tip_amount") val tipAmount: Float
+)
+
+data class OrderListModel(
+    @SerializedName("delivery_address") val deliveryAddress: String,
+    @SerializedName("tip_amount") val tipAmount: Float,
+    @SerializedName("uid") val uid: String,
+    @SerializedName("delivery_fee") val deliveryFee: Float,
+    @SerializedName("total_price") val totalPrice: Float,
+    @SerializedName("status") val status: String
 )

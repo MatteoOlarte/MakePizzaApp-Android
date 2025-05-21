@@ -3,6 +3,7 @@ package com.example.makepizza_android.data.remote.network
 import com.example.makepizza_android.core.MakePizzaAPI
 import com.example.makepizza_android.data.remote.models.IngredientListModel
 import com.example.makepizza_android.data.remote.models.OrderCreate
+import com.example.makepizza_android.data.remote.models.OrderListModel
 import com.example.makepizza_android.data.remote.models.OrderModel
 import com.example.makepizza_android.data.remote.models.OrderUpdate
 import com.example.makepizza_android.data.remote.models.PizzaListModel
@@ -74,6 +75,13 @@ class MakePizzaAPIService {
         return withContext(Dispatchers.IO) {
             val response = retrofit.create(IMakePizzaAPIClient::class.java).editOrder(uid, orderUpdate)
             response.body()
+        }
+    }
+
+    suspend fun getCurrentUserOrders(): List<OrderListModel> {
+        return withContext(Dispatchers.IO) {
+            val response = retrofit.create(IMakePizzaAPIClient::class.java).getCurrentUserOrders()
+            response.body() ?: emptyList()
         }
     }
 }

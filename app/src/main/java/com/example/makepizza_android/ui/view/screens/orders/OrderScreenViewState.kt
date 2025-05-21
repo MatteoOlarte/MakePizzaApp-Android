@@ -1,4 +1,7 @@
 package com.example.makepizza_android.ui.view.screens.orders
 
-class OrderScreenViewState {
+sealed class OrderScreenViewState {
+    object Loading : OrderScreenViewState()
+    object Success : OrderScreenViewState()
+    data class OnError(val err: String) : OrderScreenViewState()
 }

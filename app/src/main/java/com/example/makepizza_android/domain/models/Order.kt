@@ -1,5 +1,6 @@
 package com.example.makepizza_android.domain.models
 
+import com.example.makepizza_android.data.remote.models.OrderListModel
 import com.example.makepizza_android.data.remote.models.OrderModel
 import com.example.makepizza_android.data.remote.models.PizzaListModel
 import java.util.Date
@@ -16,16 +17,13 @@ data class Order(
     val updatedAt: Date
 )
 
-fun Order.toRetrofitModel() = OrderModel(
-    uid = this.uid,
-    deliveryAddress = this.deliveryAddress,
-    tipAmount = this.tipAmount,
-    deliveryFee = this.deliveryFee,
-    totalPrice = this.totalPrice,
-    status = this.status,
-    pizzas = this.pizzas,
-    createdAt = this.createdAt,
-    updatedAt = this.updatedAt
+data class OrderList(
+    val deliveryAddress: String,
+    val tipAmount: Float,
+    val uid: String,
+    val deliveryFee: Float,
+    val totalPrice: Float,
+    val status: String
 )
 
 fun OrderModel.toDomainModel() = Order(
@@ -38,4 +36,13 @@ fun OrderModel.toDomainModel() = Order(
     pizzas = this.pizzas,
     createdAt = this.createdAt,
     updatedAt = this.updatedAt
+)
+
+fun OrderListModel.toDomainModel() = OrderList(
+    uid = this.uid,
+    deliveryAddress = this.deliveryAddress,
+    tipAmount = this.tipAmount,
+    deliveryFee = this.deliveryFee,
+    totalPrice = this.totalPrice,
+    status = this.status
 )

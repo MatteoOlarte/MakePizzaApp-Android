@@ -121,7 +121,7 @@ class CheckOutScreen : Screen {
         val format = NumberFormat.getNumberInstance(Locale.US).apply {
             minimumFractionDigits = 2
             maximumFractionDigits = 2
-        }.format(totalVale.times(4200))
+        }.format(totalVale)
 
         BottomAppBar(
             containerColor = MaterialTheme.colorScheme.surface,
