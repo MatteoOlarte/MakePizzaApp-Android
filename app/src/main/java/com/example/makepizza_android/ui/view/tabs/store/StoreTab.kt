@@ -31,6 +31,7 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -99,7 +100,7 @@ object StoreTab : Tab {
             contentWindowInsets = contentWindowInsets
         ) {
             TabContent(
-                modifier = Modifier.Companion.padding(it),
+                modifier = Modifier.padding(it),
                 viewModel = viewModel,
                 uiState = uiState
             )
@@ -152,19 +153,19 @@ object StoreTab : Tab {
         ) {
             Column {
                 Text(
-                    text = address?.addressValue ?: "No hay Dirección Selecionada",
-                    style = MaterialTheme.typography.bodyMedium.copy()
+                    text = address?.addressValue ?: "No hay dirección seleccionada",
+                    style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = address?.addressName ?: "Agrega una Dirección",
+                    text = address?.addressName ?: "Agregar una dirección",
                     style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Companion.SemiBold
+                        fontWeight = FontWeight.SemiBold
                     )
                 )
             }
 
             FilledTonalIconButton(onClick = { viewModel.handleAddressClick() }) {
-                Icon(Icons.Filled.EditLocationAlt, "")
+                Icon(Icons.Filled.EditLocationAlt, contentDescription = "Cambiar dirección")
             }
         }
     }
@@ -193,8 +194,8 @@ object StoreTab : Tab {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.banner),
-                contentDescription = "contentDescription",
-                contentScale = ContentScale.Companion.Crop,
+                contentDescription = "Banner promocional",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
             BackGradient(
@@ -204,18 +205,18 @@ object StoreTab : Tab {
                 modifier = Modifier.fillMaxSize().padding(32.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Column (
+                Column(
                     horizontalAlignment = Alignment.CenterHorizontally
-                ){
+                ) {
                     Text(
-                        text = "Crear tus Propias Pizzas",
+                        text = "Crea tus propias pizzas",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
                     )
                     Text(
-                        text = "No se que poner aqui",
+                        text = "Personaliza cada detalle a tu gusto",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             color = Color.White
                         )
@@ -227,7 +228,7 @@ object StoreTab : Tab {
                 contentAlignment = Alignment.BottomEnd
             ) {
                 ElevatedButton(onClick = { navigator.current = CustomizeTab }) {
-                    Text(text = "Ver mas")
+                    Text(text = "Ver más")
                 }
             }
         }
@@ -264,7 +265,7 @@ object StoreTab : Tab {
     ) {
         item {
             TitleBox(
-                "Ingredientes Especiales",
+                "Ingredientes destacados",
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
@@ -288,7 +289,7 @@ object StoreTab : Tab {
         isLoading: Boolean = true,
         navigateTo: (uid: String) -> Unit = {}
     ) {
-        item { TitleBox("Pizzas Populares", modifier = Modifier.padding(horizontal = 16.dp)) }
+        item { TitleBox("Pizzas populares", modifier = Modifier.padding(horizontal = 16.dp)) }
 
         if (!isLoading) {
             items(pizzas) { PizzaListItem(pizzaModel = it, onClick = { navigateTo(it.uid) }) }
@@ -299,7 +300,7 @@ object StoreTab : Tab {
 
     @Composable
     private fun _GetTabOptions(): TabOptions {
-        val title = "Store"
+        val title = "Tienda"
         val icon = rememberVectorPainter(Icons.Filled.Store)
 
         return remember {

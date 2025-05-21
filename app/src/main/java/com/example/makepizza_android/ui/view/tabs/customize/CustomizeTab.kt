@@ -80,13 +80,13 @@ object CustomizeTab : Tab {
         }
 
         Scaffold(
-            modifier = Modifier.Companion.nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = { TabToolbar(scrollBehavior = scrollBehavior) },
             floatingActionButton = { TabFAB() },
             contentWindowInsets = contentWindowInsets
         ) {
             TabContent(
-                modifier = Modifier.Companion.padding(it),
+                modifier = Modifier.padding(it),
                 viewModel = viewModel,
                 uiState = uiState.value
             )
@@ -97,7 +97,7 @@ object CustomizeTab : Tab {
     @Composable
     fun TabToolbar(scrollBehavior: TopAppBarScrollBehavior) {
         TopAppBar(
-            title = { Text(text = "Personalizadas") },
+            title = { Text(text = "Pizzas Personalizadas") },
             scrollBehavior = scrollBehavior
         )
     }
@@ -109,7 +109,7 @@ object CustomizeTab : Tab {
             onClick = {},
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ) {
-            Icon(Icons.Filled.Add, "ADD")
+            Icon(Icons.Filled.Add, contentDescription = "Crear nueva pizza")
         }
     }
 
@@ -171,10 +171,10 @@ object CustomizeTab : Tab {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "No hay datos"
+                    text = "No hay pizzas personalizadas"
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                TextButton(onClick = {}) { Text(text = "Crear Pizza") }
+                TextButton(onClick = {}) { Text(text = "Crear nueva pizza") }
             }
         } else {
             LazyColumn(
@@ -187,7 +187,7 @@ object CustomizeTab : Tab {
 
     @Composable
     private fun _GetTabOptions(): TabOptions {
-        val title = "Customize"
+        val title = "Personalizar"
         val icon = rememberVectorPainter(Icons.Filled.DashboardCustomize)
 
         return remember {

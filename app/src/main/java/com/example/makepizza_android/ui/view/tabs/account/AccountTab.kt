@@ -97,10 +97,10 @@ object AccountTab : Tab {
     @Composable
     fun TabToolbar(scrollBehavior: TopAppBarScrollBehavior) {
         TopAppBar(
-            title = { Text(text = "Cuenta") },
+            title = { Text(text = "Mi Cuenta") },
             actions = {
-                IconButton(onClick = {}) {
-                    Icon(Icons.AutoMirrored.Filled.Logout, "SALIR")
+                IconButton(onClick = { /* Lógica para cerrar sesión */ }) {
+                    Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Cerrar Sesión")
                 }
             },
             scrollBehavior = scrollBehavior
@@ -186,21 +186,21 @@ object AccountTab : Tab {
 
         Text(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp),
-            text = "Opciones",
+            text = "Opciones de Cuenta",
             style = MaterialTheme.typography.titleMedium
         )
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp).clip(MaterialTheme.shapes.medium)
         ) {
             ListItem(
-                headlineContent = { Text("Pedidos") },
+                headlineContent = { Text("Mis Pedidos") },
                 modifier = Modifier.clickable(enabled = true) {
                     navigator?.push(OrderScreen())
                 }
             )
             HorizontalDivider()
             ListItem(
-                headlineContent = { Text("Dirección de envío") },
+                headlineContent = { Text("Direcciones de Envío") },
                 modifier = Modifier.clickable(enabled = true) {
                     navigator?.push(AddressScreen(current.uid))
                 }
@@ -212,12 +212,12 @@ object AccountTab : Tab {
             )
             HorizontalDivider()
             ListItem(
-                headlineContent = { Text("Editar perfil") },
+                headlineContent = { Text("Editar Perfil") },
                 modifier = Modifier.clickable(enabled = false) { }
             )
             HorizontalDivider()
             ListItem(
-                headlineContent = { Text("Ayuda") },
+                headlineContent = { Text("Ayuda y Soporte") },
                 modifier = Modifier.clickable(enabled = false) { }
             )
         }
@@ -227,7 +227,7 @@ object AccountTab : Tab {
     private fun LegalOptions() {
         Text(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp),
-            text = "Legal",
+            text = "Información Legal",
             style = MaterialTheme.typography.titleMedium
         )
         Column(
@@ -235,7 +235,7 @@ object AccountTab : Tab {
                 .clip(MaterialTheme.shapes.medium)
         ) {
             ListItem(
-                headlineContent = { Text("Licencias de terceros") },
+                headlineContent = { Text("Licencias de Terceros") },
                 modifier = Modifier.clickable { /* Sin lógica */ }
             )
         }
@@ -250,14 +250,14 @@ object AccountTab : Tab {
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onClick
             ) {
-                Text(text = "Salir")
+                Text(text = "Cerrar Sesión")
             }
         }
     }
 
     @Composable
     private fun _GetTabOptions(): TabOptions {
-        val title = "Account"
+        val title = "Cuenta"
         val icon = rememberVectorPainter(Icons.Filled.Person)
 
         return remember {

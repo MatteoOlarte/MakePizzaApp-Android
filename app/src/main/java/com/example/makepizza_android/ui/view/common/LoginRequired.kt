@@ -23,9 +23,9 @@ fun LoginRequired(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Ingresa con tu cuenta o crea una nueva"
+            text = "Inicia sesión con tu cuenta o crea una nueva"
         )
         Spacer(modifier = Modifier.height(16.dp))
-        TextButton(onClick = toLogin) { Text(text = "Iniciar Sesion") }
+        TextButton(onClick = toLogin) { Text(text = "Iniciar sesión") }
     }
 }

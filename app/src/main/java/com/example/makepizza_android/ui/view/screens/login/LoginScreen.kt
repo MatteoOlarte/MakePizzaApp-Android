@@ -69,15 +69,13 @@ class LoginScreen : Screen {
         val navigator = LocalNavigator.current
 
         TopAppBar(
-            title = { Text(text = "Ingresar") },
+            title = { Text(text = "Iniciar sesión") },
             navigationIcon = {
                 IconButton(onClick = { navigator?.pop() }) {
-                    Icon(Icons.Filled.Close, "")
+                    Icon(Icons.Filled.Close, contentDescription = "Cerrar")
                 }
             },
-            actions = {
-
-            }
+            actions = {}
         )
     }
 
@@ -106,7 +104,7 @@ class LoginScreen : Screen {
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = { }) {
-                    Text(text = "Olvide Contrasena")
+                    Text(text = "Recuperar contraseña")
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -114,7 +112,7 @@ class LoginScreen : Screen {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextButton(onClick = { navigator?.replace(RegisterScreen()) }) {
-                    Text(text = "Crear Cuenta")
+                    Text(text = "Crear una cuenta")
                 }
             }
         }
@@ -131,7 +129,7 @@ class LoginScreen : Screen {
                 horizontalArrangement = Arrangement.End
             ) {
                 Button(onClick = { viewmodel.handleOnDone() }) {
-                    Text(text = "Continuar")
+                    Text(text = "Iniciar sesión")
                 }
             }
         }
@@ -147,8 +145,8 @@ class LoginScreen : Screen {
             else -> false
         }
         val supportText = when (uiState.value) {
-            LoginScreenState.MissingEmail -> "Correo Invalido"
-            LoginScreenState.InvalidCredentials -> "Correo o Costrasena invalidos"
+            LoginScreenState.MissingEmail -> "Correo electrónico no válido"
+            LoginScreenState.InvalidCredentials -> "Correo electrónico o contraseña incorrectos"
             else -> null
         }
 
@@ -156,7 +154,7 @@ class LoginScreen : Screen {
             value = username,
             onValueChange = { viewmodel.handleUserNameChange(it) },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text(text = "Email") },
+            label = { Text(text = "Correo electrónico") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
@@ -182,12 +180,17 @@ class LoginScreen : Screen {
             LoginScreenState.MissingPassword -> true
             else -> false
         }
+        val supportText = when (uiState.value) {
+            LoginScreenState.MissingPassword -> "La contraseña debe tener al menos 8 caracteres"
+            LoginScreenState.InvalidCredentials -> "Correo electrónico o contraseña incorrectos"
+            else -> "La contraseña debe tener al menos 8 caracteres"
+        }
 
         OutlinedTextField(
             value = password,
             onValueChange = { viewmodel.handlePasswordChange(it) },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text(text = "Password") },
+            label = { Text(text = "Contraseña") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -201,7 +204,7 @@ class LoginScreen : Screen {
                 PasswordTextFiledTrailingIcon(show, onClick = { show = !show })
             },
             isError = isError,
-            supportingText = { Text(text = "Minimo de 8 caracteres etc") }
+            supportingText = { Text(text = supportText) }
         )
     }
 
@@ -210,7 +213,7 @@ class LoginScreen : Screen {
         IconButton(onClick = onClick) {
             Icon(
                 imageVector = if (show) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                contentDescription = if (show) "Hide password" else "Show password"
+                contentDescription = if (show) "Ocultar contraseña" else "Mostrar contraseña"
             )
         }
     }

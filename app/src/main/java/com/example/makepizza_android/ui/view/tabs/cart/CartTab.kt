@@ -50,7 +50,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 object CartTab : Tab {
-    private const val title = "Cart"
+    private const val title = "Carrito"
 
     override val options: TabOptions
         @Composable
@@ -106,7 +106,7 @@ object CartTab : Tab {
 
         TopAppBar(
             modifier = modifier,
-            title = { Text(text = "$title ($itemsSize)") }
+            title = { Text(text = "Carrito ($itemsSize)") }
         )
     }
 
@@ -197,10 +197,10 @@ object CartTab : Tab {
             )
 
             Button(
-                onClick = {navigator?.push(CheckOutScreen())},
+                onClick = { navigator?.push(CheckOutScreen()) },
                 enabled = !(loading || total == 0.0)
             ) {
-                Text(text = "Continuar")
+                Text(text = "Proceder al pago")
             }
         }
     }
