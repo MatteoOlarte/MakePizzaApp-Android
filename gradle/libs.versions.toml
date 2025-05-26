@@ -17,6 +17,7 @@ googleServices = "4.4.2"
 crashlytics = "3.0.3"
 roomDataBase = "2.6.1"
 ksp = "2.0.21-1.0.27"
+coil = "2.5.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -49,6 +50,7 @@ valentinilk-shimmer-compose = { module = "com.valentinilk.shimmer:compose-shimme
 google-firebase-boom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 google-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 google-firebase-auth = {module = "com.google.firebase:firebase-auth"}
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

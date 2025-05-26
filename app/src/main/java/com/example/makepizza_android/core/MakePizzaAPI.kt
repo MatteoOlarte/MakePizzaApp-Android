@@ -26,7 +26,7 @@ object MakePizzaAPI {
         val client = this.getClient()
 
         try {
-            client.cache()?.evictAll()
+            client.cache?.evictAll()
         } catch (ex: Exception) {
             Log.e("MakePizzaAPI", ex.message!!)
         }
@@ -73,12 +73,12 @@ class CacheInterceptor() : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val url = request.url().encodedPath().toString()
+        val url = request.url.encodedPath.toString()
         val shouldCache = cacheableURLs.any { url.endsWith(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")
 
-        Log.d("Retrofit", request.url().toString())
+        Log.d("Retrofit", request.url.toString())
         Log.d("Retrofit", url)
 
         return if (serverCacheControl?.contains("no-cache") == true || !shouldCache) {
@@ -98,7 +98,7 @@ class UserDefinedCacheInterceptor() : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val url = request.url().encodedPath().toString()
+        val url = request.url.encodedPath.toString()
         val shouldCache = cacheableURLs.any { url.endsWith(it) }
         val response = chain.proceed(request)
         val serverCacheControl = response.header("Cache-Control")

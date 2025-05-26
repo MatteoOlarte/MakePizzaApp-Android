@@ -178,7 +178,8 @@ private fun PreviewPizzaItem() {
         name = "namsadasdasdasdsadasdasdasdase",
         desc = "desc",
         price = 999.9f,
-        size = "S"
+        size = "S",
+        imageURL = null
     )
     ApplicationTheme { PizzaListItem(model, onClick = {}) }
 }

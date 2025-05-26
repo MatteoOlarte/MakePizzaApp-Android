@@ -9,6 +9,7 @@ data class IngredientListModel(
     val desc: String?,
     val price: Float,
     @SerializedName("is_available") val isAvailable: Boolean,
+    @SerializedName("image_url") val imageURL: String?
 )
 
 data class IngredientModel(
@@ -19,5 +20,6 @@ data class IngredientModel(
     @SerializedName("is_available") val isAvailable: Boolean,
     @SerializedName("ingredient_type") val type: String,
     @SerializedName("created_at") val created: Date,
-    @SerializedName("updated_at") val updated: Date
+    @SerializedName("updated_at") val updated: Date,
+    @SerializedName("image_url") val imageURL: String?
 )

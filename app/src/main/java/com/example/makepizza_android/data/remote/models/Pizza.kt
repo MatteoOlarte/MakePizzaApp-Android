@@ -8,7 +8,8 @@ data class PizzaListModel(
     @SerializedName("name") val name: String,
     @SerializedName("desc") val desc: String?,
     @SerializedName("price") val price: Float,
-    @SerializedName("size") val size: String
+    @SerializedName("size") val size: String,
+    @SerializedName("image_url") val imageURL: String?
 )
 
 data class PizzaModel(
@@ -21,5 +22,6 @@ data class PizzaModel(
     @SerializedName("dough") val dough: IngredientModel,
     @SerializedName("sauce") val sauce: IngredientModel,
     @SerializedName("created_at") val created: Date,
-    @SerializedName("updated_at") val updated: Date
+    @SerializedName("updated_at") val updated: Date,
+    @SerializedName("image_url") val imageURL: String?
 )

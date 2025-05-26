@@ -1,6 +1,5 @@
 package com.example.makepizza_android.ui.view.common
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -15,11 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.makepizza_android.R
 import com.example.makepizza_android.data.remote.models.IngredientListModel
 import com.example.makepizza_android.ui.theme.ApplicationTheme
 import com.valentinilk.shimmer.Shimmer
@@ -35,11 +31,8 @@ fun IngredientItem(ingredient: IngredientListModel, modifier: Modifier = Modifie
         onClick = {}
     ) {
         Box {
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
-                contentDescription = "contentDescription",
-                contentScale = ContentScale.Companion.Crop,
-                modifier = Modifier.fillMaxSize()
+            CoilImage(
+                url = ingredient.imageURL
             )
             BackGradient(
                 modifier = Modifier.fillMaxSize()
@@ -90,7 +83,8 @@ fun PreviewIngredientItem() {
         "name",
         "desc",
         999.9f,
-        true
+        true,
+        null
     )
     ApplicationTheme { IngredientItem(item) }
 }
