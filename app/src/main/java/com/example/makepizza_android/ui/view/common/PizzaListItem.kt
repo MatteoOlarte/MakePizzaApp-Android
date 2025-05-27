@@ -59,7 +59,7 @@ fun PizzaListItem(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 0.dp, vertical = 0.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ItemImage()
+                ItemImage(pizzaModel.imageURL)
 
                 Column(
                     modifier = Modifier.weight(1f)
@@ -100,17 +100,12 @@ fun PizzaListItem(
 }
 
 @Composable
-fun ItemImage() {
+fun ItemImage(url: String?) {
     Surface(
         modifier = Modifier.height(56.dp).width(56.dp),
         shape = RoundedCornerShape(5.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = "contentDescription",
-            contentScale = ContentScale.Companion.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
+        CoilImage(url)
     }
 }
 
