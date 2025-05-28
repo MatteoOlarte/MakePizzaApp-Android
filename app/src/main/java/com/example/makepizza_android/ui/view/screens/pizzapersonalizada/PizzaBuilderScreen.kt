@@ -25,21 +25,29 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 
 class PizzaBuilderScreen : Screen {
     @Composable
     override fun Content() {
+        val viewModel = viewModel<PizzaBuilderScreenViewModel>()
+
         Scaffold(
             topBar = { ScreenTopAppBar() }
         ) {
-            ScreenContent(modifier = Modifier.padding(it))
+            ScreenContent(
+                modifier = Modifier.padding(it),
+                viewModel=viewModel
+            )
         }
     }
 
@@ -62,17 +70,20 @@ class PizzaBuilderScreen : Screen {
     }
 
     @Composable
-    private fun ScreenContent(modifier: Modifier = Modifier) {
+    private fun ScreenContent(
+        viewModel: PizzaBuilderScreenViewModel,
+        modifier: Modifier = Modifier
+    ) {
         LazyColumn(
             modifier = modifier,
             contentPadding = PaddingValues(vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item { PizzaNameField()  }
-            item { SizesSelector() }
-            item { DougSelector() }
-            item { SauceSelector() }
-            item { IngredientSelector() }
+            item { SizesSelector(viewModel) }
+            item { DougSelector(viewModel) }
+            item { SauceSelector(viewModel) }
+            item { IngredientSelector(viewModel) }
             item { IsPredefinedCheckBox() }
         }
     }
@@ -98,7 +109,7 @@ class PizzaBuilderScreen : Screen {
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
-    private fun SizesSelector() {
+    private fun SizesSelector(viewModel: PizzaBuilderScreenViewModel) {
         val sizes = listOf("xl", "l", "m", "s")
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -118,8 +129,8 @@ class PizzaBuilderScreen : Screen {
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
-    private fun DougSelector() {
-        val drugs = listOf("Masa Integral")
+    private fun DougSelector(viewModel: PizzaBuilderScreenViewModel) {
+        val drugs by viewModel.drugs.observeAsState(initial = emptyList())
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Text("Masa", style = MaterialTheme.typography.titleMedium)
@@ -129,7 +140,7 @@ class PizzaBuilderScreen : Screen {
                     FilterChip(
                         selected = false,
                         onClick = {  },
-                        label = { Text(size) }
+                        label = { Text(text = size.name) }
                     )
                 }
             }
@@ -138,7 +149,7 @@ class PizzaBuilderScreen : Screen {
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
-    private fun SauceSelector() {
+    private fun SauceSelector(viewModel: PizzaBuilderScreenViewModel) {
         val drugs = listOf("Salsa de Tomate")
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -158,7 +169,7 @@ class PizzaBuilderScreen : Screen {
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
-    private fun IngredientSelector() {
+    private fun IngredientSelector(viewModel: PizzaBuilderScreenViewModel) {
         val drugs = listOf("Agrega Ingredientes")
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {

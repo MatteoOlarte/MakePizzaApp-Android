@@ -84,7 +84,8 @@ fun PreviewIngredientItem() {
         "desc",
         999.9f,
         true,
-        null
+        null,
+        ""
     )
     ApplicationTheme { IngredientItem(item) }
 }
