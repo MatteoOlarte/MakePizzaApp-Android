@@ -3,6 +3,7 @@ package com.example.makepizza_android.core
 import android.util.Log
 import com.example.makepizza_android.App
 import com.example.makepizza_android.BuildConfig
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import okhttp3.Cache
 import okhttp3.Interceptor
@@ -113,19 +114,26 @@ class UserDefinedCacheInterceptor() : Interceptor {
     }
 }
 
-//corregir esto
 class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
-        val token = FirebaseAuth.getInstance().currentUser?.getIdToken(false)?.result?.token
+        val token = try {
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            if (firebaseUser != null) {
+                val task = firebaseUser.getIdToken(false)
+                Tasks.await(task).token
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+
         val newRequest = if (token != null) {
-            originalRequest.newBuilder().also {
-                it.header("Authorization", "Bearer $token")
-            }.build()
+            originalRequest.newBuilder().header("Authorization", "Bearer $token").build()
         } else {
             originalRequest
         }
-
         return chain.proceed(newRequest)
     }
 }

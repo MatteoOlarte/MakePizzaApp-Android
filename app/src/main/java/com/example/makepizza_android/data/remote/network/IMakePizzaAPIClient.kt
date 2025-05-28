@@ -7,6 +7,7 @@ import com.example.makepizza_android.data.remote.models.OrderModel
 import com.example.makepizza_android.data.remote.models.OrderUpdate
 import com.example.makepizza_android.data.remote.models.PizzaListModel
 import com.example.makepizza_android.data.remote.models.PizzaModel
+import com.example.makepizza_android.data.remote.models.UserCreate
 import com.example.makepizza_android.data.remote.models.UserModel
 import retrofit2.Response
 import retrofit2.http.Body
@@ -18,6 +19,9 @@ import retrofit2.http.Query
 interface IMakePizzaAPIClient {
     @GET("/users/current")
     suspend fun getCurrentUser(): Response<UserModel?>
+
+    @POST("/accounts/authenticate/sign-up")
+    suspend fun signUp(@Body user: UserCreate): Response<UserModel?>
 
     @GET("/ingredients/fetch-all")
     suspend fun getAllIngredients(): Response<List<IngredientListModel>>

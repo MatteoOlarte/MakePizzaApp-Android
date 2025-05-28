@@ -48,6 +48,7 @@ import com.example.makepizza_android.ui.view.common.PizzaListItem
 import com.example.makepizza_android.ui.view.common.PizzaListItemLoading
 import com.example.makepizza_android.ui.view.screens.login.LoginScreen
 import com.example.makepizza_android.ui.view.screens.pizza.PizzaDetailScreen
+import com.example.makepizza_android.ui.view.screens.pizzapersonalizada.PizzaBuilderScreen
 
 object CustomizeTab : Tab {
     override val options: TabOptions
@@ -101,9 +102,11 @@ object CustomizeTab : Tab {
 
     @Composable
     fun TabFAB(modifier: Modifier = Modifier) {
+        val navigator = LocalNavigator.current?.parent
+
         FloatingActionButton(
             modifier = modifier,
-            onClick = {},
+            onClick = { navigator?.push(PizzaBuilderScreen()) },
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Crear nueva pizza")
@@ -161,6 +164,8 @@ object CustomizeTab : Tab {
         navigateTo: (uid: String) -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val navigator = LocalNavigator.current?.parent
+
         if (data.isEmpty()) {
             Column(
                 modifier = modifier.fillMaxSize(),
@@ -171,7 +176,11 @@ object CustomizeTab : Tab {
                     text = "No hay pizzas personalizadas"
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                TextButton(onClick = {}) { Text(text = "Crear nueva pizza") }
+                TextButton(
+                    onClick = { navigator?.push(PizzaBuilderScreen()) })
+                {
+                    Text(text = "Crear nueva pizza")
+                }
             }
         } else {
             LazyColumn(

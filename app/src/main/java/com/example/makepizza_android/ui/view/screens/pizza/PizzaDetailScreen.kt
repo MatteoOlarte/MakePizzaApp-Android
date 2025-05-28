@@ -1,6 +1,5 @@
 package com.example.makepizza_android.ui.view.screens.pizza
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,8 +40,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -52,10 +49,12 @@ import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import com.example.makepizza_android.R
 import com.example.makepizza_android.data.remote.models.IngredientModel
 import com.example.makepizza_android.data.remote.models.PizzaModel
 import com.example.makepizza_android.ui.view.common.BackGradient
+import com.example.makepizza_android.ui.view.common.CoilImage
+import java.text.NumberFormat
+import java.util.Locale
 
 
 class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen {
@@ -198,12 +197,8 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_background),
-                        contentDescription = "contentDescription",
-                        contentScale = ContentScale.Companion.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    CoilImage(data.imageURL)
+
                     BackGradient(
                         modifier = Modifier.fillMaxSize()
                     )
@@ -232,6 +227,11 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
 
     @Composable
     private fun IngredientListItem(data: IngredientModel, modifier: Modifier = Modifier) {
+        val format = NumberFormat.getNumberInstance(Locale.US).apply {
+            minimumFractionDigits = 2
+            maximumFractionDigits = 2
+        }.format(data.price)
+
         Box(
             modifier = modifier
         ) {
@@ -243,12 +243,7 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
                     modifier = Modifier.height(45.dp).width(45.dp),
                     shape = RoundedCornerShape(5.dp)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_background),
-                        contentDescription = "contentDescription",
-                        contentScale = ContentScale.Companion.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    CoilImage(data.imageURL)
                 }
 
                 Column(
@@ -268,7 +263,7 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
                             overflow = TextOverflow.Visible
                         )
                         Text(
-                            text = "$${data.price}",
+                            text = "$$format",
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 fontWeight = FontWeight.SemiBold
                             ),
@@ -281,6 +276,11 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
     }
 
     private fun LazyListScope.showPizzaIngredients(data: PizzaModel) {
+        val format = NumberFormat.getNumberInstance(Locale.US).apply {
+            minimumFractionDigits = 2
+            maximumFractionDigits = 2
+        }.format(data.price)
+
         this.item {
             Text(
                 text = "Precio",
@@ -288,7 +288,7 @@ class PizzaDetailScreen(val uid: String, val isCustom: Boolean = false) : Screen
                 style = MaterialTheme.typography.titleMedium.copy()
             )
             Text(
-                text = "$${data.price}",
+                text = "$$format",
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Light)
             )

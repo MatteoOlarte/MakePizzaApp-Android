@@ -8,6 +8,7 @@ import com.example.makepizza_android.data.remote.models.OrderModel
 import com.example.makepizza_android.data.remote.models.OrderUpdate
 import com.example.makepizza_android.data.remote.models.PizzaListModel
 import com.example.makepizza_android.data.remote.models.PizzaModel
+import com.example.makepizza_android.data.remote.models.UserCreate
 import com.example.makepizza_android.data.remote.models.UserModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,6 +19,13 @@ class MakePizzaAPIService {
     suspend fun getCurrentUser(): UserModel? {
         return withContext(Dispatchers.IO) {
             val response = retrofit.create(IMakePizzaAPIClient::class.java).getCurrentUser()
+            response.body()
+        }
+    }
+
+    suspend fun signUp(userCreate: UserCreate): UserModel? {
+        return withContext(Dispatchers.IO) {
+            val response = retrofit.create(IMakePizzaAPIClient::class.java).signUp(userCreate)
             response.body()
         }
     }
