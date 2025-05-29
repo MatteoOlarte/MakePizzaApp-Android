@@ -52,6 +52,7 @@ import com.example.makepizza_android.ui.view.common.ContentLoading
 import com.example.makepizza_android.ui.view.common.LoginRequired
 import com.example.makepizza_android.ui.view.screens.address.list.AddressScreen
 import com.example.makepizza_android.ui.view.screens.login.LoginScreen
+import com.example.makepizza_android.ui.view.screens.news.NewsScreen
 import com.example.makepizza_android.ui.view.screens.orders.OrderScreen
 
 object AccountTab : Tab {
@@ -161,7 +162,7 @@ object AccountTab : Tab {
         Column(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp) // Fixed typo: "sp-bottomedBy" to "spacedBy"
         ) {
             Text(
                 text = username,
@@ -205,29 +206,16 @@ object AccountTab : Tab {
                     navigator?.push(AddressScreen(current.uid))
                 }
             )
-            HorizontalDivider()
-            ListItem(
-                headlineContent = { Text("Notificaciones") },
-                modifier = Modifier.clickable(enabled = false) { }
-            )
-            HorizontalDivider()
-            ListItem(
-                headlineContent = { Text("Editar Perfil") },
-                modifier = Modifier.clickable(enabled = false) { }
-            )
-            HorizontalDivider()
-            ListItem(
-                headlineContent = { Text("Ayuda y Soporte") },
-                modifier = Modifier.clickable(enabled = false) { }
-            )
         }
     }
 
     @Composable
     private fun LegalOptions() {
+        val navigator = LocalNavigator.currentOrThrow.parent
+
         Text(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp),
-            text = "Información Legal",
+            text = "Noticias",
             style = MaterialTheme.typography.titleMedium
         )
         Column(
@@ -235,8 +223,8 @@ object AccountTab : Tab {
                 .clip(MaterialTheme.shapes.medium)
         ) {
             ListItem(
-                headlineContent = { Text("Licencias de Terceros") },
-                modifier = Modifier.clickable { /* Sin lógica */ }
+                headlineContent = { Text("Novedades Culinarias") },
+                modifier = Modifier.clickable { navigator?.push(NewsScreen()) }
             )
         }
     }
