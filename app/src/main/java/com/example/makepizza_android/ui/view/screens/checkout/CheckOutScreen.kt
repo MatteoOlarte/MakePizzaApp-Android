@@ -157,11 +157,23 @@ class CheckOutScreen : Screen {
                     }
                 }
 
+                val navigator = LocalNavigator.current
+
                 Button(
-                    onClick = { viewModel.handleDoneClick() },
+                    onClick = {
+                        navigator?.push(
+                            ScreenPaypal { success ->
+                                if (success) {
+                                    viewModel.handleDoneClick()
+                                } else {
+                                    
+                                }
+                            }
+                        )
+                    },
                     enabled = !loading
                 ) {
-                    Text(text = "Comprar")
+                    Text(text = "Comprar con PayPal")
                 }
             }
         }
