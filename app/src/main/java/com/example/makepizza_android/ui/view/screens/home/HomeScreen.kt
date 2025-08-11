@@ -49,7 +49,6 @@ class HomeScreen : Screen {
                 tonalElevation = 0.dp
             ) {
                 TabNavigationItem(StoreTab)
-                TabNavigationItem(CustomizeTab)
                 TabNavigationItem(CartTab)
                 TabNavigationItem(AccountTab)
             }
