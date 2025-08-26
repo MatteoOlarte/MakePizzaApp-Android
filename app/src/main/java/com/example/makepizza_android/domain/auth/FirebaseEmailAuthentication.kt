@@ -8,7 +8,25 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.auth
 
-class FirebaseEmailAuthentication: IFirebaseAuth {
+class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FirebaseEmailAuthentication: IFirebaseAuth {
     override fun createUser(data: FirebaseUserCreate): Task<AuthResult> {
         val auth = Firebase.auth
         val email = data.email

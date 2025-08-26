@@ -69,7 +69,8 @@ import com.example.makepizza_android.ui.view.common.TitleBox
 import com.example.makepizza_android.ui.view.screens.pizza.PizzaDetailScreen
 import com.example.makepizza_android.ui.view.tabs.customize.CustomizeTab
 
-object StoreTab : Tab {
+object
+StoreTab : Tab {
     override val options: TabOptions
         @Composable
         get() = _GetTabOptions()

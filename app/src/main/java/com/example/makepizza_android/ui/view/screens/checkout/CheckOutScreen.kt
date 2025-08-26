@@ -162,11 +162,11 @@ class CheckOutScreen : Screen {
                 Button(
                     onClick = {
                         navigator?.push(
-                            ScreenPaypal { success ->
+                            ScreenPaypal(amount=totalVale) { success ->  // 🔹 aquí paso el valor dinámico
                                 if (success) {
                                     viewModel.handleDoneClick()
                                 } else {
-                                    
+                                    // manejar error
                                 }
                             }
                         )
@@ -175,6 +175,7 @@ class CheckOutScreen : Screen {
                 ) {
                     Text(text = "Comprar con PayPal")
                 }
+
             }
         }
     }

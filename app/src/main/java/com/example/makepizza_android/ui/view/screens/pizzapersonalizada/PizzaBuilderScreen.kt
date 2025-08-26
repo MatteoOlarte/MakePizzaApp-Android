@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Checkbox
@@ -150,7 +151,7 @@ class PizzaBuilderScreen : Screen {
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun SauceSelector(viewModel: PizzaBuilderScreenViewModel) {
-        val drugs = listOf("Salsa de Tomate")
+        val drugs = listOf("Sin Salsa, Salsa de Tomate")
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Text("Salsa", style = MaterialTheme.typography.titleMedium)
@@ -170,7 +171,7 @@ class PizzaBuilderScreen : Screen {
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun IngredientSelector(viewModel: PizzaBuilderScreenViewModel) {
-        val drugs = listOf("Agrega Ingredientes")
+        val drugs = listOf("Salchicha")
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Text("Agrega Ingredientes", style = MaterialTheme.typography.titleMedium)
@@ -179,7 +180,7 @@ class PizzaBuilderScreen : Screen {
                 drugs.forEach { size ->
                     FilterChip(
                         selected = false,
-                        onClick = {  },
+                        onClick = { },
                         label = { Text(size) }
                     )
                 }

@@ -49,7 +49,50 @@ import com.example.makepizza_android.ui.view.screens.checkout.CheckOutScreen
 import java.text.NumberFormat
 import java.util.Locale
 
-object CartTab : Tab {
+object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CartTab : Tab {
     private const val title = "Carrito"
 
     override val options: TabOptions
